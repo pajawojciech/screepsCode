@@ -1,13 +1,13 @@
 var roleSpawn = {
     run: function()
     {
-        checkAndCreate('harvester', [CARRY, MOVE, WORK], 2);
-        checkAndCreate('builder', [CARRY, MOVE, WORK], 2);
-        checkAndCreate('upgrader', [CARRY, MOVE, WORK], 2);
+        checkAndCreate('harvester', [CARRY, MOVE, MOVE, MOVE, MOVE,MOVE, MOVE, MOVE, WORK], 2, false);
+        checkAndCreate('builder', [CARRY, CARRY, MOVE, MOVE, MOVE, WORK, WORK], 3, false);
+        //checkAndCreate('upgrader', [CARRY, CARRY, CARRY, MOVE, WORK], 2, false);
     }
 };
 
-var checkAndCreate = function(role, body, limit)
+var checkAndCreate = function(role, body, limit, log)
 {
     var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role);   
 	if(cr.length < limit) {
@@ -16,6 +16,10 @@ var checkAndCreate = function(role, body, limit)
 		if(res == 0)
 		{
 			console.log('Spawning new ' + newName);
+		}
+		else if(log)
+		{
+		    console.log('Not spawn' + role + ' ' + res);
 		}
 	}
 };

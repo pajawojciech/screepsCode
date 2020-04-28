@@ -19,7 +19,7 @@ var roleBuilder = {
             }
             else
             {
-                var pos = new RoomPosition(19, 27, creep.room.name);
+                var pos = Game.flags['Flag1'].pos;
 	            creep.moveTo(pos);
             }
 	    }
