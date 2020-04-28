@@ -1,0 +1,23 @@
+var roleSpawn = {
+    run: function()
+    {
+        checkAndCreate('harvester', [CARRY, MOVE, WORK], 2);
+        checkAndCreate('builder', [CARRY, MOVE, WORK], 2);
+        checkAndCreate('upgrader', [CARRY, MOVE, WORK], 2);
+    }
+};
+
+var checkAndCreate = function(role, body, limit)
+{
+    var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role);   
+	if(cr.length < limit) {
+		var newName = role + Game.time;
+		var res = Game.spawns['Spawn1'].spawnCreep(body, newName, {memory: {role: role}});
+		if(res == 0)
+		{
+			console.log('Spawning new ' + newName);
+		}
+	}
+};
+
+module.exports = roleSpawn;

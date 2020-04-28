@@ -1,11 +1,9 @@
 var roleBuilder = {
-
-    /** @param {Creep} creep **/
     run: function(creep) {
 
 	    if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.building = false;
-            creep.say('🔄 harvest');
+            creep.say('🔄 B harv');
 	    }
 	    if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
 	        creep.memory.building = true;
@@ -18,6 +16,11 @@ var roleBuilder = {
                 if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
+            }
+            else
+            {
+                var pos = new RoomPosition(19, 27, creep.room.name);
+	            creep.moveTo(pos);
             }
 	    }
 	    else {
