@@ -4,7 +4,6 @@ var roleBuilder = require('builder');
 var roleSpawn = require('spawn');
 
 module.exports.loop = function () {
-
     var tower = Game.getObjectById('ae4918cc0b404a0663dcd91e');
     if(tower) {
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -27,19 +26,24 @@ module.exports.loop = function () {
 
         if(true)
         {
-            if(creep.memory.role == 'harvester') {
+            if(creep.memory.role == 'h') {
                 roleHarvester.run(creep);
             }
-            if(creep.memory.role == 'upgrader') {
+            if(creep.memory.role == 'u') {
                 roleUpgrader.run(creep);
             }
-            if(creep.memory.role == 'builder') {
+            if(creep.memory.role == 'b') {
                 roleBuilder.run(creep);
             }
         }
         else
         {
-            roleBuilder.run(creep);
+            roleHarvester.run(creep);
+        }
+        
+        if(creep.name == 'xxx')
+        {
+            creep.memory.role = 'h';
         }
     }
     

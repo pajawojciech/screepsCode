@@ -1,27 +1,72 @@
 var roleSpawn = {
     run: function()
     {
-        checkAndCreate('harvester', [CARRY, MOVE, MOVE, MOVE, MOVE,MOVE, MOVE, MOVE, WORK], 2, false);
-        checkAndCreate('builder', [CARRY, CARRY, MOVE, MOVE, MOVE, WORK, WORK], 3, false);
-        //checkAndCreate('upgrader', [CARRY, CARRY, CARRY, MOVE, WORK], 2, false);
+        if(checkAndCreate('h', 5))
+        {
+            var b = Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length;
+            checkAndCreate('b', b);
+
+            checkAndCreate('u', 5);
+        }
     }
 };
 
-var checkAndCreate = function(role, body, limit, log)
+var checkAndCreate = function(role, limit) //zwraca informację, czy limit spełniony
 {
+    var sp = Game.spawns['Spawn1'];
     var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role);   
 	if(cr.length < limit) {
 		var newName = role + Game.time;
+		var energyy = Game.spawns['Spawn1'].room.energyCapacityAvailable;
+		if(role == 'h' && cr.length == 0)
+		{
+		    energyy = 300;
+		}
+		else
+		{
+		    energyy = Math.floor(energyy / 100) * 100;
+		}
+ 		var bodyA = bodyArray.filter(
+ 		    function(value){
+                return value[0] == role && value[1] == energyy;
+            }
+        ); 
+        var body;
+        if(bodyA.length > 0)
+        {
+            body = bodyA[0][2];
+        }
+        else
+        {
+            console.log('ERR ' + role + ' ' + energyy);
+            return false;
+        }
 		var res = Game.spawns['Spawn1'].spawnCreep(body, newName, {memory: {role: role}});
 		if(res == 0)
 		{
-			console.log('Spawning new ' + newName);
+		    console.log('Spawning new ' + newName);
 		}
-		else if(log)
-		{
-		    console.log('Not spawn' + role + ' ' + res);
-		}
+		return false;
+	}
+	else
+	{
+	    return true;
 	}
 };
+
+var bodyArray = 
+[
+  ['h', 300, [CARRY, MOVE, WORK]], //200
+  ['b', 300, [CARRY, MOVE, WORK, WORK]],
+  ['u', 300, [CARRY, CARRY, MOVE, WORK]],
+  
+  ['h', 400, [CARRY, MOVE, MOVE, MOVE, WORK, WORK]],
+  ['b', 400, [CARRY, MOVE, WORK, WORK, WORK]],
+  ['u', 400, [CARRY, MOVE, WORK, WORK, WORK]],
+
+  ['h', 500, [CARRY, MOVE, MOVE, MOVE, WORK, WORK, WORK]],
+  ['b', 500, [CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],
+  ['u', 500, [CARRY, MOVE, WORK, WORK, WORK, WORK]],
+];
 
 module.exports = roleSpawn;
