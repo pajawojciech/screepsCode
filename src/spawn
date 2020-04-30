@@ -1,12 +1,14 @@
 var roleSpawn = {
     run: function()
     {
-        if(checkAndCreate('h', 5))
+        if(checkAndCreate('h', 1))
         {
-            var b = Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length;
+            var b = Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0 ? 1 : 0;
             checkAndCreate('b', b);
-
+            
             checkAndCreate('u', 5);
+            
+            checkAndCreate('d', 2);
         }
     }
 };
@@ -59,14 +61,22 @@ var bodyArray =
   ['h', 300, [CARRY, MOVE, WORK]], //200
   ['b', 300, [CARRY, MOVE, WORK, WORK]],
   ['u', 300, [CARRY, CARRY, MOVE, WORK]],
+  ['d', 300, [CARRY, MOVE, WORK, WORK]],
   
   ['h', 400, [CARRY, MOVE, MOVE, MOVE, WORK, WORK]],
   ['b', 400, [CARRY, MOVE, WORK, WORK, WORK]],
   ['u', 400, [CARRY, MOVE, WORK, WORK, WORK]],
+  ['d', 400, [CARRY, MOVE, WORK, WORK, WORK]],
 
-  ['h', 500, [CARRY, MOVE, MOVE, MOVE, WORK, WORK, WORK]],
-  ['b', 500, [CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],
+  ['h', 500, [CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, WORK, WORK]],
+  ['b', 500, [CARRY, CARRY, CARRY, MOVE, WORK, WORK, WORK]],
   ['u', 500, [CARRY, MOVE, WORK, WORK, WORK, WORK]],
+  ['d', 500, [CARRY, MOVE, WORK, WORK, WORK, WORK]],
+  
+  ['h', 600, [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK]],
+  ['b', 600, [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],
+  ['u', 600, [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, WORK, WORK, WORK]],
+  ['d', 600, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK]],
 ];
 
 module.exports = roleSpawn;

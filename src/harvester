@@ -1,9 +1,26 @@
 var roleHarvester = {
     run: function(creep) {
 	    if(creep.store.getFreeCapacity() > 0) { //pobieranie energii
-            var sources = creep.room.find(FIND_SOURCES_ACTIVE);//, {filter: (structure) => {return structure.structureType != STRUCTURE_CONTAINER}  });
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0]);
+	        var sources = creep.room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_CONTAINER) && 
+                                structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                    }
+            });
+            if(sources.length > 0)
+            {
+                var closestSource = creep.pos.findClosestByPath(sources);
+                var res = creep.withdraw(closestSource, RESOURCE_ENERGY);
+                if(res == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(closestSource);
+                }
+            }
+            else
+            {
+                sources = creep.room.find(FIND_SOURCES_ACTIVE);
+                if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(sources[0]);
+                }
             }
         }
         else { //oddanie energii
@@ -19,27 +36,23 @@ var roleHarvester = {
             if(targets.length > 0) {
                 if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     var res = creep.moveTo(targets[0]);
-                    if(res != OK && res != -11)
-                    {
-                        creep.say("MOVE! " + res);
-                    }
                 }
             }
             else // w drugiej kolejności container
             {
-                targets = creep.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_CONTAINER) && 
-                                structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                    }
-                });
+                //targets = creep.room.find(FIND_STRUCTURES, {
+                  //  filter: (structure) => {
+                    //    return (structure.structureType == STRUCTURE_CONTAINER) && 
+                      //          structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                    //}
+                //});
                 
-                if(targets.length > 0) {
-                    if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(targets[0]);
-                    }
-                }
-                else
+                //if(targets.length > 0) {
+                  //  if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    //    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                    //}
+                //}
+                //else
                 {
                     var pos = Game.flags['Flag1'].pos;
 	                creep.moveTo(pos);
