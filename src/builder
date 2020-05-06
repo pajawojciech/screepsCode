@@ -19,8 +19,8 @@ var roleBuilder = {
             }
             else
             {
-                var pos = Game.flags['Flag1'].pos;
-	            creep.moveTo(pos);
+                var pos = Game.spawns['Spawn1'].pos;
+	            creep.moveTo(new RoomPosition(pos.x - 5, pos.y - 5, pos.roomName));
             }
 	    }
 	    else {

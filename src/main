@@ -21,6 +21,82 @@ module.exports.loop = function () {
             }
         }
     }
+    
+    for(var name in Game.spawns)
+    {
+        var sp = Game.spawns[name];
+        var cont = sp.room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
+        var contB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
+        
+        var ext = sp.room.find(FIND_MY_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
+        var extB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
+            
+        if(cont + contB == 0)
+        {
+            console.log('build container');
+            var source = sp.room.find(FIND_SOURCES)[0];
+            var rad = 1; 
+            var x = source.pos.x;
+            var y = source.pos.y;
+            var step = 0;
+            while(sp.room.createConstructionSite(x, y, STRUCTURE_CONTAINER) != 0)
+            {
+                console.log('build ' + x + '   ' + y);
+                switch(step)
+                {
+                    case 0:
+                        x = source.pos.x - rad;
+                        y = source.pos.y + rad;
+                        break;
+                    case 1:
+                        y -= rad * 2;
+                        break;
+                    case 2:
+                        x += rad * 2;
+                        break;
+                    case 3:
+                        y += rad *2;
+                        rad++;
+                        break;
+                }
+                step = (step + 1) % 4;
+                if(rad > 5) break;
+            }
+        }
+        else if(extB == 0) // AND ext < availible extensions limit
+        {
+            var rad = 1; 
+            var x = sp.pos.x;
+            var y = sp.pos.y;
+            var step = 0;
+            while(sp.room.createConstructionSite(x, y, STRUCTURE_EXTENSION) != 0)
+            {
+                switch(step)
+                {
+                    case 0:
+                        x = sp.pos.x - rad;
+                        y = sp.pos.y + rad;
+                        break;
+                    case 1:
+                        y -= rad * 2;
+                        break;
+                    case 2:
+                        x += rad * 2;
+                        break;
+                    case 3:
+                        y += rad *2;
+                        rad++;
+                        break;
+                }
+                step = (step + 1) % 4;
+                if(rad > 5) 
+                {
+                    console.log("aborted");
+                    break;
+                }
+            }
+        }
+    }
 
     roleSpawn.run(); 
 
