@@ -1,8 +1,8 @@
-var roleHarvester = require('harvester');
-var roleUpgrader = require('upgrader');
-var roleBuilder = require('builder');
-var roleDigger = require('digger');
-var roleSpawn = require('spawn');
+var roleHarvester = require('creep.harvester');
+var roleUpgrader = require('creep.upgrader');
+var roleBuilder = require('creep.builder');
+var roleDigger = require('creep.digger');
+var roleSpawn = require('control.spawn');
 
 module.exports.loop = function () {
     var tower = Game.getObjectById('b79480fdd36188172391de79');
@@ -33,68 +33,12 @@ module.exports.loop = function () {
             
         if(cont + contB == 0)
         {
-            console.log('build container');
             var source = sp.room.find(FIND_SOURCES)[0];
-            var rad = 1; 
-            var x = source.pos.x;
-            var y = source.pos.y;
-            var step = 0;
-            while(sp.room.createConstructionSite(x, y, STRUCTURE_CONTAINER) != 0)
-            {
-                console.log('build ' + x + '   ' + y);
-                switch(step)
-                {
-                    case 0:
-                        x = source.pos.x - rad;
-                        y = source.pos.y + rad;
-                        break;
-                    case 1:
-                        y -= rad * 2;
-                        break;
-                    case 2:
-                        x += rad * 2;
-                        break;
-                    case 3:
-                        y += rad *2;
-                        rad++;
-                        break;
-                }
-                step = (step + 1) % 4;
-                if(rad > 5) break;
-            }
+            createConstructionX(source.pos, STRUCTURE_CONTAINER);
         }
-        else if(extB == 0) // AND ext < availible extensions limit
+        else if(extB == 0) 
         {
-            var rad = 1; 
-            var x = sp.pos.x;
-            var y = sp.pos.y;
-            var step = 0;
-            while(sp.room.createConstructionSite(x, y, STRUCTURE_EXTENSION) != 0)
-            {
-                switch(step)
-                {
-                    case 0:
-                        x = sp.pos.x - rad;
-                        y = sp.pos.y + rad;
-                        break;
-                    case 1:
-                        y -= rad * 2;
-                        break;
-                    case 2:
-                        x += rad * 2;
-                        break;
-                    case 3:
-                        y += rad *2;
-                        rad++;
-                        break;
-                }
-                step = (step + 1) % 4;
-                if(rad > 5) 
-                {
-                    console.log("aborted");
-                    break;
-                }
-            }
+            createConstructionX(sp.pos, STRUCTURE_EXTENSION);
         }
     }
 
@@ -122,16 +66,40 @@ module.exports.loop = function () {
         {
             roleHarvester.run(creep);
         }
-        
-        if(creep.name == 'xxx')
-        {
-            creep.memory.role = 'h';
-        }
     }
-    
-    //for(var i in Memory.creeps) {
-        //if(!Game.creeps[i]) {
-          //  delete Memory.creeps[i];
-        //}
-    //}
-}
+};
+
+var createConstructionX = function(pos, type)
+{
+    var rad = 1; 
+    var x = pos.x;
+    var y = pos.y;
+    var step = 0;
+    var loop = true;
+    while(loop)
+    {
+        var res = Game.rooms[pos.roomName].createConstructionSite(x, y, type);
+            
+        if(res == OK || res == ERR_RCL_NOT_ENOUGH) break;
+        if(rad > 5) break;
+                
+        switch(step)
+        {
+            case 0:
+                x = pos.x - rad;
+                y = pos.y + rad;
+                break;
+            case 1:
+                y -= rad * 2;
+                break;
+            case 2:
+                x += rad * 2;
+                break;
+            case 3:
+                y += rad *2;
+                rad++;
+                break;
+        }
+        step = (step + 1) % 4;
+    }
+};

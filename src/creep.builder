@@ -3,11 +3,9 @@ var roleBuilder = {
 
 	    if(creep.memory.building && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.building = false;
-            creep.say('🔄 B harv');
 	    }
 	    if(!creep.memory.building && creep.store.getFreeCapacity() == 0) {
 	        creep.memory.building = true;
-	        creep.say('🚧 build');
 	    }
 
 	    if(creep.memory.building) {
