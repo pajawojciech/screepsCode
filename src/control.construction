@@ -1,0 +1,59 @@
+module.exports = {
+    run: function()
+    {
+        for(var name in Game.spawns)
+        {
+            var sp = Game.spawns[name];
+            var cont = sp.room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
+            var contB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
+            
+            var ext = sp.room.find(FIND_MY_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
+            var extB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
+                
+            if(cont + contB == 0)
+            {
+                var source = sp.room.find(FIND_SOURCES)[0];
+                createConstructionX(source.pos, STRUCTURE_CONTAINER);
+            }
+            else if(extB == 0) 
+            {
+                createConstructionX(sp.pos, STRUCTURE_EXTENSION);
+            }
+        }
+    }
+};
+
+var createConstructionX = function(pos, type)
+{
+    var rad = 1; 
+    var x = pos.x;
+    var y = pos.y;
+    var step = 0;
+    var loop = true;
+    while(loop)
+    {
+        var res = Game.rooms[pos.roomName].createConstructionSite(x, y, type);
+            
+        if(res == OK || res == ERR_RCL_NOT_ENOUGH) break;
+        if(rad > 5) break;
+                
+        switch(step)
+        {
+            case 0:
+                x = pos.x - rad;
+                y = pos.y + rad;
+                break;
+            case 1:
+                y -= rad * 2;
+                break;
+            case 2:
+                x += rad * 2;
+                break;
+            case 3:
+                y += rad *2;
+                rad++;
+                break;
+        }
+        step = (step + 1) % 4;
+    }
+};

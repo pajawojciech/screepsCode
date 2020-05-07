@@ -1,105 +1,11 @@
-var roleHarvester = require('creep.harvester');
-var roleUpgrader = require('creep.upgrader');
-var roleBuilder = require('creep.builder');
-var roleDigger = require('creep.digger');
-var roleSpawn = require('control.spawn');
+var spawner = require('control.spawn');
+var constructor = require('control.construction');
+var creeps = require('control.creeps');
 
 module.exports.loop = function () {
-    var tower = Game.getObjectById('b79480fdd36188172391de79');
-    if(tower) {
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if(closestHostile) {
-            tower.attack(closestHostile);
-        }
-        else
-        {
-            var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => structure.hits < structure.hitsMax
-            });
-            if(closestDamagedStructure) {
-                //tower.repair(closestDamagedStructure);
-            }
-        }
-    }
-    
-    for(var name in Game.spawns)
-    {
-        var sp = Game.spawns[name];
-        var cont = sp.room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
-        var contB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
-        
-        var ext = sp.room.find(FIND_MY_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
-        var extB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
-            
-        if(cont + contB == 0)
-        {
-            var source = sp.room.find(FIND_SOURCES)[0];
-            createConstructionX(source.pos, STRUCTURE_CONTAINER);
-        }
-        else if(extB == 0) 
-        {
-            createConstructionX(sp.pos, STRUCTURE_EXTENSION);
-        }
-    }
 
-    roleSpawn.run(); 
-
-    for(var name in Game.creeps) {
-        var creep = Game.creeps[name];
-
-        if(true)
-        {
-            if(creep.memory.role == 'h') {
-                roleHarvester.run(creep);
-            }
-            if(creep.memory.role == 'u') {
-                roleUpgrader.run(creep);
-            }
-            if(creep.memory.role == 'b') {
-                roleBuilder.run(creep);
-            }
-            if(creep.memory.role == 'd') {
-                roleDigger.run(creep);
-            }
-        }
-        else
-        {
-            roleHarvester.run(creep);
-        }
-    }
-};
-
-var createConstructionX = function(pos, type)
-{
-    var rad = 1; 
-    var x = pos.x;
-    var y = pos.y;
-    var step = 0;
-    var loop = true;
-    while(loop)
-    {
-        var res = Game.rooms[pos.roomName].createConstructionSite(x, y, type);
-            
-        if(res == OK || res == ERR_RCL_NOT_ENOUGH) break;
-        if(rad > 5) break;
-                
-        switch(step)
-        {
-            case 0:
-                x = pos.x - rad;
-                y = pos.y + rad;
-                break;
-            case 1:
-                y -= rad * 2;
-                break;
-            case 2:
-                x += rad * 2;
-                break;
-            case 3:
-                y += rad *2;
-                rad++;
-                break;
-        }
-        step = (step + 1) % 4;
-    }
+    constructor.run();
+    spawner.run(); 
+    creeps.run();
+  
 };
