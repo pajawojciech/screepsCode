@@ -6,27 +6,28 @@ var roleDigger = require('creep.digger');
 module.exports = {
     run: function()
     {
-        for(var name in Game.creeps) {
-        var creep = Game.creeps[name];
+        for(var name in Game.creeps) 
+        {
+            var creep = Game.creeps[name];
         
-        if(creep.memory.role == 'h') {
-            if(!roleHarvester.run(creep))
-            {
-                roleUpgrader.run(creep);    
+            if(creep.memory.role == 'h') {
+                if(!roleHarvester.run(creep))
+                {
+                    roleUpgrader.run(creep);
+                }
             }
-        }
-        if(creep.memory.role == 'u') {
-            roleUpgrader.run(creep);
-        }
-        if(creep.memory.role == 'b') {
-            if(!roleBuilder.run(creep))
-            {
+            if(creep.memory.role == 'u') {
                 roleUpgrader.run(creep);
             }
+            if(creep.memory.role == 'b') {
+                if(!roleBuilder.run(creep))
+                {
+                    roleUpgrader.run(creep);
+                }
+            }
+            if(creep.memory.role == 'd') {
+                roleDigger.run(creep);
+            }
         }
-        if(creep.memory.role == 'd') {
-            roleDigger.run(creep);
-        }
-    }
     }
 };

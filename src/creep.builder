@@ -16,7 +16,7 @@ var roleBuilder = {
 
 	    if(creep.memory.building) {
             if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                creep.moveTo(targets[0]);
             }
 	    }
 	    else {

@@ -4,11 +4,15 @@ module.exports = {
         for(var name in Game.spawns)
         {
             var sp = Game.spawns[name];
+            var room = sp.room;
             var cont = sp.room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
             var contB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
+            var controller = room.controller;
             
             var ext = sp.room.find(FIND_MY_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
             var extB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
+            
+            var extensions;
                 
             if(cont + contB == 0)
             {
@@ -17,7 +21,28 @@ module.exports = {
             }
             else if(extB == 0) 
             {
-                createConstructionX(sp.pos, STRUCTURE_EXTENSION);
+                extensions = createConstructionX(sp.pos, STRUCTURE_EXTENSION);
+            }
+            
+            if(sp.room.controller.level == 2 && extensions == ERR_RCL_NOT_ENOUGH && typeof(Memory.path1) == 'undefined')
+            {
+                var cont = room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_CONTAINER } })[0];
+                
+                var path = room.findPath(cont.pos, sp.pos, { ignoreCreeps: true });
+                for(var pos in path)
+                {
+                    room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
+                }
+                
+                var path = room.findPath(cont.pos, controller.pos, { ignoreCreeps: true });
+                path.splice(path.length - 3, 3);
+                for(var pos in path)
+                {
+                    room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
+                    //room.visual.circle(path[pos].x, path[pos].y, {stroke: 'red'});
+                }
+                
+                Memory.path1 = true;
             }
         }
     }
@@ -34,7 +59,7 @@ var createConstructionX = function(pos, type)
     {
         var res = Game.rooms[pos.roomName].createConstructionSite(x, y, type);
             
-        if(res == OK || res == ERR_RCL_NOT_ENOUGH) break;
+        if(res == OK || res == ERR_RCL_NOT_ENOUGH) return res;
         if(rad > 5) break;
                 
         switch(step)
