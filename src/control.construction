@@ -1,6 +1,18 @@
 module.exports = {
     run: function()
     {
+        if(typeof(Memory.sources) == 'undefined')
+        {
+            Memory.sources = [];
+            var sources = Game.rooms['sim'].find(FIND_SOURCES).map(function (x) { return x.id; });
+            for(var source in sources)
+            {
+                var val = sources[source];
+                var item = { "sourceId" : val };
+                Memory.sources.push(item);
+            }   
+        }
+        
         for(var name in Game.spawns)
         {
             var sp = Game.spawns[name];
@@ -13,36 +25,71 @@ module.exports = {
             var extB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
             
             var extensions;
-                
-            if(cont + contB == 0)
+            
+            if(cont + contB == 0) //jeśli nie ma zbudowanych i budowanych containerów buduj pierwszy container
             {
                 var source = sp.room.find(FIND_SOURCES)[0];
-                createConstructionX(source.pos, STRUCTURE_CONTAINER);
+                var res = createConstructionX(source.pos, STRUCTURE_CONTAINER);
+                if(res == 0)
+                {
+                    Memory.sources.find(function (x) { return x.sourceId == source.id; }).newContainer = true;
+                }
             }
-            else if(extB == 0) 
+            else if(extB == 0) //jeśli skończony pierwszy container buduj extensiony
             {
                 extensions = createConstructionX(sp.pos, STRUCTURE_EXTENSION);
             }
             
-            if(sp.room.controller.level == 2 && extensions == ERR_RCL_NOT_ENOUGH && typeof(Memory.path1) == 'undefined')
+            //ustaw memory sources containerId
+            if(Memory.sources.filter(function(x) { return x.newContainer; } ).length > 0)
             {
-                var cont = room.find(FIND_STRUCTURES, { filter: { structureType: STRUCTURE_CONTAINER } })[0];
+                var sourceMem = Memory.sources.find(function(x) { return x.newContainer; } );
+                var obj = Game.getObjectById(sourceMem.sourceId);
                 
-                var path = room.findPath(cont.pos, sp.pos, { ignoreCreeps: true });
-                for(var pos in path)
+                var container = obj.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                if(container.length > 0)
                 {
-                    room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
+                    sourceMem.containerId = container[0].id;
+                    sourceMem.newContainer = false;
                 }
-                
-                var path = room.findPath(cont.pos, controller.pos, { ignoreCreeps: true });
-                path.splice(path.length - 3, 3);
-                for(var pos in path)
+            }
+            
+            //jeśli jest max extensionów buduj kontenery do reszty source
+            if(extensions == ERR_RCL_NOT_ENOUGH && contB + extB == 0 && sp.room.controller.level > 1)
+            {
+                var sources = Memory.sources.filter(function(x) { return typeof(x.containerId) == 'undefined' } );
+                if(sources.length > 0)
                 {
-                    room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
-                    //room.visual.circle(path[pos].x, path[pos].y, {stroke: 'red'});
+                    var source = Game.getObjectById(sources[0].sourceId);
+                    var res = createConstructionX(source.pos, STRUCTURE_CONTAINER);
+                    if(res == 0)
+                    {
+                        Memory.sources.find(function (x) { return x.sourceId == source.id; }).newContainer = true;
+                    }
                 }
+                else //drogi
+                {
+                    var source = Memory.sources.find(function(x) { return typeof(x.road) == 'undefined' } );
+                    if(typeof(source) != 'undefined')
+                    {
+                        var cont = Game.getObjectById(source.containerId);
                 
-                Memory.path1 = true;
+                        var path = room.findPath(cont.pos, sp.pos, { ignoreCreeps: true });
+                        for(var pos in path)
+                        {
+                            room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
+                        }
+                        
+                        var path = room.findPath(cont.pos, controller.pos, { ignoreCreeps: true });
+                        path.splice(path.length - 3, 3);
+                        for(var pos in path)
+                        {
+                            //room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
+                        }
+                        
+                        source.road = true;        
+                    }
+                }
             }
         }
     }

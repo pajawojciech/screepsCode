@@ -7,7 +7,11 @@ module.exports = {
                                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                     }
             });
-            if(sources.length > 0)
+
+            var contInRange = creep.pos.findInRange(sources, 10);
+            
+            //console.log('cont in range ' + contInRange.len)
+            if(contInRange.length > 0)
             {
                 var closestSource = creep.pos.findClosestByPath(sources);
                 var res = creep.withdraw(closestSource, RESOURCE_ENERGY);
@@ -17,9 +21,29 @@ module.exports = {
             }
             else
             {
-                sources = creep.room.find(FIND_SOURCES_ACTIVE);
-                if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0]);
+                var sourcesInRange = creep.pos.findInRange(FIND_SOURCES_ACTIVE, 10);
+                if(sourcesInRange.length > 0)
+                {
+                    if(creep.harvest(sourcesInRange[0]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(sourcesInRange[0]);
+                    }
+                }
+                else{
+                    if(sources.length > 0)
+                    {
+                        var closestSource = creep.pos.findClosestByPath(sources);
+                        var res = creep.withdraw(closestSource, RESOURCE_ENERGY);
+                        if(res == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(closestSource);
+                        }
+                    }
+                    else
+                    {
+                        sources = creep.room.find(FIND_SOURCES_ACTIVE);
+                        if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(sources[0]);
+                        }
+                    }
                 }
             }
     }
