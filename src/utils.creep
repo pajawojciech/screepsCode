@@ -1,7 +1,18 @@
 module.exports = {
     getEnergy : function (creep)
     {
-        var sources = creep.room.find(FIND_STRUCTURES, {
+        var sources = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 10); //TODO dodaj filter where resoruceType == RESOURCE_ENERGY //TODO po³¹cz dropniête z containerami
+        if(sources.length > 0)
+        {
+            var closestSource = creep.pos.findClosestByRange(sources);
+            var res = creep.pickup(closestSource);
+            if(res == ERR_NOT_IN_RANGE) {
+                creep.moveTo(closestSource);
+            }
+        }
+        else
+        {
+            sources = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                         return (structure.structureType == STRUCTURE_CONTAINER) && 
                                 structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
@@ -13,7 +24,7 @@ module.exports = {
             //console.log('cont in range ' + contInRange.len)
             if(contInRange.length > 0)
             {
-                var closestSource = creep.pos.findClosestByPath(sources);
+                var closestSource = creep.pos.findClosestByRange(sources);
                 var res = creep.withdraw(closestSource, RESOURCE_ENERGY);
                 if(res == ERR_NOT_IN_RANGE) {
                     creep.moveTo(closestSource);
@@ -31,7 +42,7 @@ module.exports = {
                 else{
                     if(sources.length > 0)
                     {
-                        var closestSource = creep.pos.findClosestByPath(sources);
+                        var closestSource = creep.pos.findClosestByRange(sources);
                         var res = creep.withdraw(closestSource, RESOURCE_ENERGY);
                         if(res == ERR_NOT_IN_RANGE) {
                             creep.moveTo(closestSource);
@@ -46,5 +57,6 @@ module.exports = {
                     }
                 }
             }
+        }
     }
 };

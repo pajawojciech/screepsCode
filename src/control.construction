@@ -1,18 +1,8 @@
 module.exports = {
     run: function()
     {
-        if(typeof(Memory.sources) == 'undefined')
-        {
-            Memory.sources = [];
-            var sources = Game.rooms['sim'].find(FIND_SOURCES).map(function (x) { return x.id; });
-            for(var source in sources)
-            {
-                var val = sources[source];
-                var item = { "sourceId" : val };
-                Memory.sources.push(item);
-            }   
-        }
-        
+        initializeMemory();
+
         for(var name in Game.spawns)
         {
             var sp = Game.spawns[name];
@@ -87,7 +77,7 @@ module.exports = {
                             //room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
                         }
                         
-                        source.road = true;        
+                        source.road = true;
                     }
                 }
             }
@@ -129,3 +119,51 @@ var createConstructionX = function(pos, type)
         step = (step + 1) % 4;
     }
 };
+
+var initializeMemory = function()
+{
+    if(typeof(Memory.sources) == 'undefined')
+    {
+        Memory.sources = [];
+        var terr = new Room.Terrain('sim');
+        var sources = Game.rooms['sim'].find(FIND_SOURCES).map(function (x) { return x.id; });
+        for(var source in sources)
+        {
+            var val = sources[source];
+            var item = { "sourceId" : val };
+             
+            var count = 0;
+            var sourcePos = Game.getObjectById(val).pos;
+            var x = sourcePos.x;
+            var y = sourcePos.y;
+            for(var i in nearbyArr)
+            {
+                var arrPos = nearbyArr[i];
+                if(terr.get(x - arrPos[0], y - arrPos[1]) != 1)
+                {
+                    count++;
+                }
+            }
+            item.space = count;
+            
+            Memory.sources.push(item);
+        }   
+    }
+};
+
+var nearbyArr = 
+[
+    [-1,-1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0,  1],
+    [1, -1],
+    [1,  0],
+    [1,  1]
+];
+
+
+
+
+
