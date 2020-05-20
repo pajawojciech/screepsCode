@@ -51,7 +51,16 @@ module.exports = {
                 if(sources.length > 0)
                 {
                     var source = Game.getObjectById(sources[0].sourceId);
-                    var res = createConstructionX(source.pos, STRUCTURE_CONTAINER);
+                    var nearbyContainer = source.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                    var res;
+                    if(nearbyContainer.length > 0)
+                    {
+                        res = 0;
+                    }
+                    else
+                    {
+                        res = createConstructionX(source.pos, STRUCTURE_CONTAINER);
+                    }
                     if(res == 0)
                     {
                         Memory.sources.find(function (x) { return x.sourceId == source.id; }).newContainer = true;
@@ -148,6 +157,31 @@ var initializeMemory = function()
             
             Memory.sources.push(item);
         }   
+        console.log("INIT MEM SOURCES");
+    }
+    else
+    {
+        for(var i in Memory.sources)
+        {
+            var mem = Memory.sources[i];
+            var s = Game.getObjectById(mem.sourceId);
+            if(s == null)
+            {
+                console.log("CLEAN MEM SOURCES");
+                delete Memory.sources;
+                return;
+            }
+            if(typeof(mem.containerId) != 'undefined')
+            {
+                var c = Game.getObjectById(mem.containerId);
+                if(c == null)
+                {
+                    console.log("CLEAN CONTAINER");
+                    delete mem.newContainer;
+                    delete mem.containerId;
+                }
+            }
+        }
     }
 };
 
