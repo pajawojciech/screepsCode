@@ -125,8 +125,8 @@ var initializeMemory = function()
     if(typeof(Memory.sources) == 'undefined')
     {
         Memory.sources = [];
-        var terr = new Room.Terrain('sim');
-        var sources = Game.rooms['sim'].find(FIND_SOURCES).map(function (x) { return x.id; });
+        var terr = new Room.Terrain(Game.spawns['Spawn1'].room.name);
+        var sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES).map(function (x) { return x.id; });
         for(var source in sources)
         {
             var val = sources[source];

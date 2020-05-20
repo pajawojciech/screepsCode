@@ -32,6 +32,11 @@ var checkAndCreate = function(role, limit) //zwraca informację, czy limit speł
 	{
 	    energyCap = Math.floor(energyCap / 100) * 100;
 	}
+
+	if(energyCap > 600)
+	{
+		energyCap = 600;
+	}
 	
     var conf = bodyDict[role + energyCap];
     if(typeof(limit) == 'undefined')
