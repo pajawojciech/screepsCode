@@ -12,7 +12,21 @@ var roleSpawn = {
             if(d > 0)
             {
                 checkAndCreate('u');
-                checkAndCreate('d', 2); //TODO liczenie trzeba dodac
+
+                d = 0;
+                for(var i in Memory.sources)
+                {
+                    var mem = Memory.sources[i];
+                    if(mem.space > 2)
+                    {
+                        d += 2;
+                    }
+                    else
+                    {
+                        d += mem.space;
+                    }
+                }
+                checkAndCreate('d', d);
             }
         }
     }

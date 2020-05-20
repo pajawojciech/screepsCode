@@ -73,13 +73,13 @@ module.exports = {
                     {
                         var cont = Game.getObjectById(source.sourceId);
                 
-                        var path = room.findPath(cont.pos, sp.pos, { ignoreCreeps: true, ignoreRoads: true });
+                        var path = room.findPath(cont.pos, sp.pos, { ignoreCreeps: true, ignoreRoads: true, swampCost: 1 });
                         for(var pos in path)
                         {
                             room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
                         }
                         
-                        var path = room.findPath(cont.pos, controller.pos, { ignoreCreeps: true, ignoreRoads: true });
+                        var path = room.findPath(cont.pos, controller.pos, { ignoreCreeps: true, ignoreRoads: true, swampCost: 1 });
                         path.splice(path.length - 3, 3);
                         for(var pos in path)
                         {
