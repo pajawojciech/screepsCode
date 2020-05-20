@@ -19,13 +19,18 @@ var roleSpawn = {
                     var mem = Memory.sources[i];
                     if(typeof(mem.containerId) != 'undefined')
                     {
-                        if(mem.space > 2)
+                        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && creep.memory.sourceId == mem.sourceId);  
+                        var limit = (mem.space > 2) ? 2 : mem.space;
+                        
+                        d += limit;
+                        
+                        if(cr.length < limit)
                         {
-                            d += 2;
-                        }
-                        else
-                        {
-                            d += mem.space;
+                            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && typeof(creep.memory.sourceId) == 'undefined');
+                            if(crFree.length > 0)
+                            {
+                                crFree[0].memory.sourceId = mem.sourceId;
+                            }
                         }
                     }
                 }
