@@ -2,7 +2,7 @@ module.exports = {
     getEnergy : function (creep)
     {
         var MAX_RANGE = 10;
-        
+       
         var dropped = creep.pos.findInRange(FIND_DROPPED_RESOURCES, MAX_RANGE);
         if(dropped.length > 0)
         {
@@ -32,7 +32,7 @@ module.exports = {
             }
             return;
         }
-         
+
         var sources = creep.room.find(FIND_SOURCES_ACTIVE);
         
         var sourcesInRange = creep.pos.findInRange(sources, MAX_RANGE);
@@ -40,29 +40,22 @@ module.exports = {
         {
             var closestSource = creep.pos.findClosestByRange(sourcesInRange);
             
-            var res = creep.withdraw(closestSource, RESOURCE_ENERGY);
+            var res = creep.harvest(closestSource, RESOURCE_ENERGY);
             if(creep.harvest(closestSource) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(closestSource);
             }
             return;
         }
-                
+
         if(containers.length > 0)
         {
             var closestContainer = creep.pos.findClosestByRange(containers);
-            var res = creep.withdraw(closestContainer, RESOURCE_ENERGY);
-            if(res == ERR_NOT_IN_RANGE) {
-                creep.moveTo(closestContainer);
-            }
+            creep.moveTo(closestContainer);
             return;
         }
 
         var closestSource = creep.pos.findClosestByRange(sources);
-        var res = creep.withdraw(closestSource, RESOURCE_ENERGY);
-        if(res == ERR_NOT_IN_RANGE) {
-            creep.moveTo(closestSource);
-        }
-        creep.say('5');
+        creep.moveTo(closestSource);
     }
     
 };
