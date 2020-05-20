@@ -17,13 +17,16 @@ var roleSpawn = {
                 for(var i in Memory.sources)
                 {
                     var mem = Memory.sources[i];
-                    if(mem.space > 2)
+                    if(typeof(mem.containerId) != 'undefined')
                     {
-                        d += 2;
-                    }
-                    else
-                    {
-                        d += mem.space;
+                        if(mem.space > 2)
+                        {
+                            d += 2;
+                        }
+                        else
+                        {
+                            d += mem.space;
+                        }
                     }
                 }
                 checkAndCreate('d', d);
