@@ -50,17 +50,8 @@ var checkAndCreate = function(role, limit) //zwraca informację, czy limit speł
 	{
 	    energyCap = (sp.room.energyAvailable > 300) ? sp.room.energyAvailable : 300;
 	}
-	else
-	{
-	    energyCap = Math.floor(energyCap / 100) * 100;
-	}
-
-	if(energyCap > 600)
-	{
-		energyCap = 600;
-	}
 	
-    var conf = bodyDict[role + energyCap];
+    var conf = getBody(role, energyCap);
     if(typeof(limit) == 'undefined')
     {
         limit = conf[0];
@@ -86,6 +77,18 @@ var checkAndCreate = function(role, limit) //zwraca informację, czy limit speł
 	}
 };
 
+var getBody = function(role, limit)
+{
+    var body = bodyDict[role + limit];
+    
+    while(typeof(body) == 'undefined')
+    {
+        limit = limit - 50;
+        body = bodyDict[role + limit];
+    }
+    return body;
+}
+
 var bodyDict = {
   "h300" : [2, [CARRY, CARRY, CARRY, MOVE, WORK]], 
   "b300" : [2, [CARRY, MOVE, WORK, WORK]],
@@ -106,6 +109,8 @@ var bodyDict = {
   "b600" : [2, [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],
   "u600" : [2, [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, WORK, WORK, WORK]],
   "d600" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK]],
+  
+  "d800" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
 };
 
 module.exports = roleSpawn;

@@ -1,6 +1,8 @@
 module.exports = {
     run: function()
     {
+        var CONT_RANGE = 3;
+
         initializeMemory();
 
         for(var name in Game.spawns)
@@ -36,7 +38,7 @@ module.exports = {
                 var sourceMem = Memory.sources.find(function(x) { return x.newContainer; } );
                 var obj = Game.getObjectById(sourceMem.sourceId);
                 
-                var container = obj.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                var container = obj.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
                 if(container.length > 0)
                 {
                     sourceMem.containerId = container[0].id;
@@ -51,7 +53,7 @@ module.exports = {
                 if(sources.length > 0)
                 {
                     var source = Game.getObjectById(sources[0].sourceId);
-                    var nearbyContainer = source.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                    var nearbyContainer = source.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
                     var res;
                     if(nearbyContainer.length > 0)
                     {
@@ -180,6 +182,10 @@ var initializeMemory = function()
                     delete mem.newContainer;
                     delete mem.containerId;
                 }
+            }
+            if(mem.road && Game.time % 10000 == 0)
+            {
+                delete mem.road;
             }
         }
         
