@@ -82,7 +82,7 @@ module.exports = {
                         }
                         
                         var path = room.findPath(cont.pos, controller.pos, { ignoreCreeps: true, ignoreRoads: true, swampCost: 1 });
-                        path.splice(path.length - 3, 3);
+                        path.splice(path.length - 1, 1);
                         for(var pos in path)
                         {
                             room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
@@ -90,6 +90,62 @@ module.exports = {
                         
                         source.road = true;
                     }
+                }
+            }
+            
+            if(typeof(sp.memory.newContainer) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont > 0)
+            {
+                var nearbyContainer = sp.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                
+                var res;
+                if(nearbyContainer.length > 0)
+                {
+                    res = 0;
+                }
+                else
+                {
+                    res = createConstructionX(sp.pos, STRUCTURE_CONTAINER);
+                }
+                if(res == 0)
+                {
+                    sp.memory.newContainer = true;
+                }
+            }
+            if(typeof(sp.memory.newContainer) != 'undefined' && sp.memory.newContainer)
+            {
+                var nearbyContainer = sp.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                if(nearbyContainer.length > 0)
+                {
+                    sp.memory.newContainer = false;
+                    sp.memory.containerId = nearbyContainer[0].id;
+                }
+            }
+            
+            if(typeof(sp.memory.newContainer2) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont > 0)
+            {
+                var nearbyContainer = controller.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                
+                var res;
+                if(nearbyContainer.length > 0)
+                {
+                    res = 0;
+                }
+                else
+                {
+                    res = createConstructionX(controller.pos, STRUCTURE_CONTAINER);
+                }
+                if(res == 0)
+                {
+                    sp.memory.newContainer2 = true;
+                }
+            }
+            if(typeof(sp.memory.newContainer2) != 'undefined' && sp.memory.newContainer2)
+            {
+                var nearbyContainer = controller.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                if(nearbyContainer.length > 0)
+                {
+                    sp.memory.newContainer2 = false;
+                    sp.memory.containerId2 = nearbyContainer[0].id;
                 }
             }
         }
@@ -189,11 +245,30 @@ var initializeMemory = function()
             }
         }
         
-       for(var i in Memory.creeps) 
-       {
+        for(var i in Memory.creeps) 
+        {
             if(!Game.creeps[i]) 
             {
                 delete Memory.creeps[i];
+            }
+        }
+        
+        for(var i in Memory.spawns)
+        {
+            var mem = Memory.spawns[i];
+            var c = Game.getObjectById(mem.containerId);
+            if(c == null)
+            {
+                console.log("CLEAN SP CONTAINER");
+                delete mem.containerId;
+                delete mem.newContainer;
+            }
+            c = Game.getObjectById(mem.containerId2);
+            if(c == null)
+            {
+                console.log("CLEAN SP CONTAINER2");
+                delete mem.containerId2;
+                delete mem.newContainer2;
             }
         }
     }

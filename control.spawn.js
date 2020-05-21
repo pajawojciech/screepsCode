@@ -111,6 +111,7 @@ var bodyDict = {
   "d600" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK]],
   
   "d800" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
+  "d1000" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
 };
 
 module.exports = roleSpawn;
