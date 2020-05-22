@@ -34,7 +34,10 @@ var roleSpawn = {
                         }
                     }
                 }
-                checkAndCreate('d', d);
+                if(checkAndCreate('d', d))
+                {
+                    checkAndCreate('c');
+                }
             }
         }
     }
@@ -94,6 +97,8 @@ var bodyDict = {
   "b300" : [2, [CARRY, MOVE, WORK, WORK]],
   "u300" : [0, [CARRY, CARRY, MOVE, WORK]],
   "d300" : [3, [CARRY, MOVE, WORK, WORK]],
+  
+  "c300" : [1, [CARRY, MOVE]],
   
   "h400" : [2, [CARRY, CARRY, MOVE, MOVE, MOVE, WORK]],
   "b400" : [3, [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
