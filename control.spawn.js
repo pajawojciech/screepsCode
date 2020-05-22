@@ -82,6 +82,7 @@ var checkAndCreate = function(role, limit) //zwraca informację, czy limit speł
 
 var getBody = function(role, limit)
 {
+    limit = Math.floor(limit / 50) * 50;
     var body = bodyDict[role + limit];
     
     while(typeof(body) == 'undefined')
