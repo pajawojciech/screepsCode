@@ -50,7 +50,7 @@ var checkAndCreate = function(role, limit) //zwraca informację, czy limit speł
     var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role);   
 	var energyCap = Game.spawns['Spawn1'].room.energyCapacityAvailable;
 	
-	if(role == 'h' && cr.length == 0)
+	if((role == 'h' || role == 'd') && cr.length == 0)
 	{
 	    energyCap = (sp.room.energyAvailable > 300) ? sp.room.energyAvailable : 300;
 	}
@@ -117,7 +117,7 @@ var bodyDict = {
   "d500" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK]],
   "c500" : [2, [MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
   
-  "h600" : [1, [MOVE,MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
+  "h600" : [2, [MOVE,MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
   "b600" : [2, [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],
   "u600" : [3, [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, WORK, WORK, WORK]],
   "d600" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK]],
