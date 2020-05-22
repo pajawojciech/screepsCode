@@ -20,7 +20,7 @@ var roleCarrier = {
             if(res == ERR_NOT_IN_RANGE) {
                 creep.moveTo(c.pos);
             }
-            if(res == OK) //or if empty
+            else
             {
                 delete creep.memory.containerId;
             }

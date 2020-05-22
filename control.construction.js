@@ -239,7 +239,7 @@ var initializeMemory = function()
                     delete mem.containerId;
                 }
             }
-            if(mem.road && Game.time % 10000 == 0)
+            if(mem.road && Game.time % 5000 == 0)
             {
                 delete mem.road;
             }

@@ -14,13 +14,14 @@ var roleSpawn = {
                 checkAndCreate('u');
 
                 d = 0;
+                dLimit = getBody('d', Game.spawns['Spawn1'].room.energyCapacityAvailable).limit;
                 for(var i in Memory.sources)
                 {
                     var mem = Memory.sources[i];
                     if(typeof(mem.containerId) != 'undefined')
                     {
                         var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && creep.memory.sourceId == mem.sourceId);  
-                        var limit = (mem.space > 2) ? 2 : mem.space;
+                        var limit = (mem.space > dLimit) ? dLimit : mem.space;
                         
                         d += limit;
                         
@@ -57,12 +58,12 @@ var checkAndCreate = function(role, limit) //zwraca informację, czy limit speł
     var conf = getBody(role, energyCap);
     if(typeof(limit) == 'undefined')
     {
-        limit = conf[0];
+        limit = conf.limit;
     }
     
 	if(cr.length < limit) {
 		var newName = role + Game.time;
-        var body = conf[1];
+        var body = conf.body;
 		var res = Game.spawns['Spawn1'].spawnCreep(body, newName, {memory: {role: role}});
 		if(res == 0)
 		{
@@ -89,7 +90,11 @@ var getBody = function(role, limit)
         limit = limit - 50;
         body = bodyDict[role + limit];
     }
-    return body;
+
+    return {
+        "limit": body[0],
+        "body": body[1]
+    };
 }
 
 var bodyDict = {
@@ -97,27 +102,31 @@ var bodyDict = {
   "b300" : [2, [CARRY, MOVE, WORK, WORK]],
   "u300" : [0, [CARRY, CARRY, MOVE, WORK]],
   "d300" : [3, [CARRY, MOVE, WORK, WORK]],
-  "c300" : [1, [CARRY, MOVE]],
+  "c300" : [0, [CARRY, MOVE]],
   
-  "h400" : [2, [CARRY, CARRY, MOVE, MOVE, MOVE, WORK]],
-  "b400" : [3, [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
+  "h400" : [2, [CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
+  "b400" : [3, [CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
   "u400" : [0, [CARRY, MOVE, WORK, WORK, WORK]],
   "d400" : [2, [CARRY, MOVE, WORK, WORK, WORK]],
   "c400" : [2, [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]],
 
-  "h500" : [2, [CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, WORK, WORK]],
+  "h500" : [2, [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, WORK]],
   "b500" : [3, [CARRY, CARRY, CARRY, MOVE, WORK, WORK, WORK]],
   "u500" : [2, [CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],
   "d500" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK]],
-  "c500" : [2, [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]],
+  "c500" : [2, [MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
   
-  "h600" : [2, [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, WORK, WORK]],
+  "h600" : [1, [MOVE,MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
   "b600" : [2, [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],
-  "u600" : [2, [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, WORK, WORK, WORK]],
+  "u600" : [3, [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, WORK, WORK, WORK]],
   "d600" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK]],
+  "c600" : [3, [MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
   
-  "d800" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
-  "d1000" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
+  "d800" : [1, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
+  "c800" : [3, [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
+  
+  "d1000" : [1, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
+  "c1000" : [3, [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
 };
 
 module.exports = roleSpawn;
