@@ -256,19 +256,26 @@ var initializeMemory = function()
         for(var i in Memory.spawns)
         {
             var mem = Memory.spawns[i];
-            var c = Game.getObjectById(mem.containerId);
-            if(c == null)
+            if(typeof(mem.containerId) != 'undefined')
             {
-                console.log("CLEAN SP CONTAINER");
-                delete mem.containerId;
-                delete mem.newContainer;
+                var c = Game.getObjectById(mem.containerId);
+                if(c == null)
+                {
+                    console.log("CLEAN SP CONTAINER");
+                    delete mem.containerId;
+                    delete mem.newContainer;
+                }
             }
-            c = Game.getObjectById(mem.containerId2);
-            if(c == null)
+            
+            if(typeof(mem.containerId2) != 'undefined')
             {
-                console.log("CLEAN SP CONTAINER2");
-                delete mem.containerId2;
-                delete mem.newContainer2;
+                var c = Game.getObjectById(mem.containerId2);
+                if(c == null)
+                {
+                    console.log("CLEAN SP CONTAINER2");
+                    delete mem.containerId2;
+                    delete mem.newContainer2;
+                }
             }
         }
     }

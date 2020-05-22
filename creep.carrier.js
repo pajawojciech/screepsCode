@@ -2,38 +2,55 @@ var roleCarrier = {
     run: function(creep) {
 	    if(creep.store.getFreeCapacity() > 0) 
 	    {
-	        var s = Memory.sources.filter(function(x) { return typeof(x.containerId) != 'undefined' } ).sort(sortContainers);
-            console.log(s.map(function (x) {return x.id} ));
-            //var source = Game.getObjectById(creep.memory.sourceId);
-            //if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                //creep.moveTo(source);
-            //}
+	        if(typeof(creep.memory.containerId) == 'undefined')
+	        {
+    	        var s = Memory.sources
+    	            .filter((x) => typeof(x.containerId) != 'undefined' )
+    	            .map((x) => x.containerId)
+    	            .sort(sortContainers);
+
+                if(s.length > 0)
+                {
+                    creep.memory.containerId = s[0];
+                }
+	        }
+                
+            var c = Game.getObjectById(creep.memory.containerId);
+            var res = creep.withdraw(c, RESOURCE_ENERGY);
+            if(res == ERR_NOT_IN_RANGE) {
+                creep.moveTo(c.pos);
+            }
+            if(res == OK) //or if empty
+            {
+                delete creep.memory.containerId;
+            }
         }
         else 
         {
-            //var targets;
-            //targets = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                //filter: (structure) => {
-                    //return (structure.structureType == STRUCTURE_CONTAINER) 
-                    //&& structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-                    //;
-                //}
-            //});
+            var x = Memory.sources.map((x) => x.containerId);
+
+            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_CONTAINER) 
+                    && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                    && !(x.includes(structure.id));
+                }
+            });
             
-            //if(targets.length > 0) 
-            //{
-                //if(creep.transfer(targets, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    //creep.moveTo(targets);
-                //}
-            //}
+            if(typeof(target) != 'undefined')
+            {
+                if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
+                }
+            }
         }
 	}
 };
 
 var sortContainers = function(x,y) 
 {
-    var xg = Game.getObjectById(x.newContainer); 
-    var yg = Game.getObjectById(y.newContainer);
+    var xg = Game.getObjectById(x); 
+    var yg = Game.getObjectById(y);
     if(xg == null)
     {
         return 1;
@@ -42,11 +59,11 @@ var sortContainers = function(x,y)
     {
         return -1;
     }
-    if(xg.getFreeCapacity() > yg.getFreeCapacity())
+    if(xg.store.getFreeCapacity() > yg.store.getFreeCapacity())
     {
         return 1;
     }
-    else if(xg.getFreeCapacity() == yg.getFreeCapacity())
+    else if(xg.store.getFreeCapacity() == yg.store.getFreeCapacity())
     {
         return 0;
     }
