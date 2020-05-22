@@ -29,7 +29,7 @@ module.exports = {
             }
             else if(extB == 0) //jeśli skończony pierwszy container buduj extensiony
             {
-                extensions = createConstructionX(sp.pos, STRUCTURE_EXTENSION);
+                extensions = createConstructionSquare(sp.pos, STRUCTURE_EXTENSION);
             }
             
             //ustaw memory sources containerId
@@ -104,7 +104,7 @@ module.exports = {
                 }
                 else
                 {
-                    res = createConstructionX(sp.pos, STRUCTURE_CONTAINER);
+                    res = createConstructionSquare(sp.pos, STRUCTURE_CONTAINER);
                 }
                 if(res == 0)
                 {
@@ -148,6 +148,12 @@ module.exports = {
                     sp.memory.containerId2 = nearbyContainer[0].id;
                 }
             }
+            
+            if(ext > 10 && typeof(sp.memory.road) == 'undefined' && contB + extB == 0)
+            {
+                createConstructionSquare(sp.pos, STRUCTURE_ROAD, false, 4, false);
+                sp.memory.road = true;
+            }
         }
     }
 };
@@ -184,6 +190,59 @@ var createConstructionX = function(pos, type)
                 break;
         }
         step = (step + 1) % 4;
+    }
+};
+
+var createConstructionSquare = function(pos, type, even = true, range = 5, one = true)
+{
+    var rad = 1; 
+    var x = pos.x;
+    var y = pos.y;
+    var step = 0;
+    var loop = true;
+    while(loop)
+    {
+        switch(step)
+        {
+            case 0:
+                x = pos.x - rad;
+                y = pos.y + rad;
+                step++;
+                break;
+            case 1:
+                y -= 1;
+                if(y == pos.y - rad)
+                {step++;}
+                break;
+            case 2:
+                x += 1;
+                if(x == pos.x + rad)
+                {step++;}
+                break;
+            case 3:
+                y += 1;
+                if(y == pos.y + rad)
+                {step++;}
+                break;
+            case 4:
+                x -= 1;
+                if(x - 1 == pos.x - rad)
+                {
+                    step++;
+                    rad++;
+                }
+                break;
+        }
+        step = step % 5;
+        if((x + y + pos.x + pos.y) % 2 == (even ? 0 : 1))
+        {
+            //Game.rooms[pos.roomName].visual.circle(x, y);
+            var res = Game.rooms[pos.roomName].createConstructionSite(x, y, type);
+        }
+        console.log(res);
+        
+        if(one && (res == OK || res == ERR_RCL_NOT_ENOUGH)) return res;
+        if(rad > range) return 1;
     }
 };
 
@@ -276,6 +335,11 @@ var initializeMemory = function()
                     delete mem.containerId2;
                     delete mem.newContainer2;
                 }
+            }
+            
+            if(mem.road && Game.time % 10000 == 0)
+            {
+                delete mem.road;
             }
         }
     }
