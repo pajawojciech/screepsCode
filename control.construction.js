@@ -239,8 +239,7 @@ var createConstructionSquare = function(pos, type, even = true, range = 5, one =
             //Game.rooms[pos.roomName].visual.circle(x, y);
             var res = Game.rooms[pos.roomName].createConstructionSite(x, y, type);
         }
-        console.log(res);
-        
+
         if(one && (res == OK || res == ERR_RCL_NOT_ENOUGH)) return res;
         if(rad > range) return 1;
     }

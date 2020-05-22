@@ -1,6 +1,6 @@
 var roleCarrier = {
     run: function(creep) {
-	    if(creep.store.getFreeCapacity() > 0) 
+	    if(creep.store.getUsedCapacity() == 0) 
 	    {
 	        if(typeof(creep.memory.containerId) == 'undefined')
 	        {
@@ -28,19 +28,32 @@ var roleCarrier = {
         else 
         {
             var x = Memory.sources.map((x) => x.containerId);
-
-            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            if(typeof(creep.memory.targetId) == 'undefined')
+	        {
+    	        var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_CONTAINER) 
                     && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     && !(x.includes(structure.id));
+                    }
+                });    
+
+                if(target != null)
+                {
+                    creep.memory.targetId = target.id;
                 }
-            });
+	        }
+	        
+	        var target = Game.getObjectById(creep.memory.targetId);
             
             if(typeof(target) != 'undefined')
             {
                 if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
+                }
+                else
+                {
+                    delete creep.memory.targetId;
                 }
             }
         }
