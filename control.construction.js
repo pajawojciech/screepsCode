@@ -18,6 +18,8 @@ module.exports = {
             
             var extensions;
             
+            sp.memory.containerCount = cont;
+            
             if(cont + contB == 0) //jeśli nie ma zbudowanych i budowanych containerów buduj pierwszy container
             {
                 var source = sp.room.find(FIND_SOURCES)[0];
@@ -93,7 +95,7 @@ module.exports = {
                 }
             }
             
-            if(typeof(sp.memory.newContainer) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont > 0)
+            if(typeof(sp.memory.newContainer) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont > 1)
             {
                 var nearbyContainer = sp.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
                 
@@ -121,7 +123,7 @@ module.exports = {
                 }
             }
             
-            if(typeof(sp.memory.newContainer2) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont > 0)
+            if(typeof(sp.memory.newContainer2) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont > 2)
             {
                 var nearbyContainer = controller.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
                 
@@ -149,7 +151,7 @@ module.exports = {
                 }
             }
             
-            if(ext > 10 && typeof(sp.memory.road) == 'undefined' && contB + extB == 0)
+            if(ext > 10 && typeof(sp.memory.road) == 'undefined' && contB + extB == 0 && cont > 2)
             {
                 createConstructionSquare(sp.pos, STRUCTURE_ROAD, false, 4, false);
                 sp.memory.road = true;

@@ -35,7 +35,7 @@ var roleSpawn = {
                         }
                     }
                 }
-                if(checkAndCreate('d', d))
+                if(checkAndCreate('d', d) && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
                 {
                     checkAndCreate('c');
                 }
