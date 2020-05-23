@@ -115,7 +115,7 @@ module.exports = {
             }
             if(typeof(sp.memory.newContainer) != 'undefined' && sp.memory.newContainer)
             {
-                var nearbyContainer = sp.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                var nearbyContainer = sp.pos.findInRange(FIND_STRUCTURES, 4, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
                 if(nearbyContainer.length > 0)
                 {
                     sp.memory.newContainer = false;
@@ -123,9 +123,9 @@ module.exports = {
                 }
             }
             
-            if(typeof(sp.memory.newContainer2) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont > 2)
+            if(typeof(sp.memory.newContainer2) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont >= Memory.sources.length)
             {
-                var nearbyContainer = controller.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                var nearbyContainer = controller.pos.findInRange(FIND_STRUCTURES, 4, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
                 
                 var res;
                 if(nearbyContainer.length > 0)
@@ -143,7 +143,7 @@ module.exports = {
             }
             if(typeof(sp.memory.newContainer2) != 'undefined' && sp.memory.newContainer2)
             {
-                var nearbyContainer = controller.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                var nearbyContainer = controller.pos.findInRange(FIND_STRUCTURES, 4, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
                 if(nearbyContainer.length > 0)
                 {
                     sp.memory.newContainer2 = false;

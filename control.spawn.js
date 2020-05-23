@@ -3,6 +3,11 @@ var roleSpawn = {
     {
         if(checkAndCreate('h'))
         {
+            if(Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0)
+            {
+                checkAndCreate('a', 5);
+            }
+
             if(Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0)
             {
                 checkAndCreate('b');
@@ -37,6 +42,7 @@ var roleSpawn = {
                 }
                 if(checkAndCreate('d', d) && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
                 {
+                    checkAndCreate('r');
                     checkAndCreate('c');
                 }
             }
@@ -103,7 +109,9 @@ var bodyDict = {
   "b300" : [2, [CARRY, MOVE, WORK, WORK]],
   "u300" : [0, [CARRY, CARRY, MOVE, WORK]],
   "d300" : [3, [CARRY, MOVE, WORK, WORK]],
+  "r300" : [1, [CARRY, MOVE, WORK]],
   "c300" : [0, [CARRY, MOVE]],
+  "a300" : [1, [TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,ATTACK, MOVE]],
   
   "h400" : [2, [CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
   "b400" : [3, [CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
