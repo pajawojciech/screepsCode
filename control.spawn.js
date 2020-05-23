@@ -1,13 +1,13 @@
 var roleSpawn = {
     run: function()
     {
+        if(Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0)
+        {
+            checkAndCreate('a', 5);
+        }
+        
         if(checkAndCreate('h'))
         {
-            if(Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0)
-            {
-                checkAndCreate('a', 5);
-            }
-
             if(Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0)
             {
                 checkAndCreate('b');
