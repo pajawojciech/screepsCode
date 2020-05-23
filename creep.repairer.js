@@ -2,17 +2,6 @@ var utils = require('utils.creep');
 
 var roleRepairer = {
     run: function(creep) {
-        var targets = creep.room.find(FIND_STRUCTURES, { //przenies to do ifa
-            filter: (structure) => {
-                return (structure.structureType != STRUCTURE_WALL 
-                    && structure.hits != structure.hitsMax);
-            }
-        });
-        
-        if(targets.length == 0) {
-            return false;
-        }
-        
         if(creep.memory.work && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.work = false;
 	    }
@@ -22,9 +11,15 @@ var roleRepairer = {
         
 	    if(creep.memory.work) {
 	        var target;
-	        
 	        if(typeof(creep.memory.targetId) == 'undefined')
 	        {
+	            var targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType != STRUCTURE_WALL 
+                            && structure.hits != structure.hitsMax);
+                    }
+                });
+                
 	            target = targets.sort(sortStructuresByHits)[0];
                 if(target != null)
                 {
@@ -33,14 +28,14 @@ var roleRepairer = {
 	        }
 	        else
 	        {
-	            target = Game.getObjectById(creep.memory.targetId)
+	            target = Game.getObjectById(creep.memory.targetId);
 	        }
 	        
 	        var res = creep.repair(target);
             if(res == ERR_NOT_IN_RANGE) {
-                var res = creep.moveTo(target);
+                creep.moveTo(target);
             }
-            else if(res != OK)
+            else if(res != OK || target.hits == target.hitsMax)
             {
                 delete creep.memory.targetId;
             }
@@ -59,18 +54,14 @@ var roleRepairer = {
 	            utils.getEnergy(creep);
             }
         }
-        return true;
 	}
 };
 
-var sortStructuresByHits = function(x,y) //od największej różnicy
+var sortStructuresByHits = function(x,y) //procentowo najsłabszy
 {
-    //var xg = x.hits / x.hitsMax;
-    var xg = x.hitsMax - x.hits; 
-    //var yg = y.hits / y.hitsMax;
-    var yg = y.hitsMax - y.hits;
-    //console.log(xg);
-    
+    var xg = x.hits / x.hitsMax;
+    var yg = y.hits / y.hitsMax;
+
     if(xg > yg)
     {
         return 1;

@@ -1,5 +1,3 @@
-var utils = require('utils.creep');
-
 var roleAttacker = {
     run: function(creep) {
         var enemy = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
