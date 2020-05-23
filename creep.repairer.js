@@ -56,7 +56,11 @@ var roleRepairer = {
             }
         }
         else {
-            var ruins = creep.room.find(FIND_RUINS);
+            var ruins = creep.room.find(FIND_RUINS, {
+                filter: function(object) {
+                    return object.store.getUsedCapacity() > 0;
+                }
+            });
             if(ruins.length > 0) {
                 var ruin = ruins[0];
 	            var res = creep.withdraw(ruin, RESOURCE_ENERGY);
