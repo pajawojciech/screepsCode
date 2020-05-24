@@ -153,7 +153,7 @@ module.exports = {
             
             if(ext > 10 && typeof(sp.memory.road) == 'undefined' && contB + extB == 0 && cont > 2)
             {
-                createConstructionSquare(sp.pos, STRUCTURE_ROAD, false, 4, false);
+                createConstructionSquare(sp.pos, STRUCTURE_ROAD, false, 3, false);
                 sp.memory.road = true;
             }
         }

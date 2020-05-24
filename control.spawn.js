@@ -19,7 +19,8 @@ var roleSpawn = {
                 checkAndCreate('u');
 
                 d = 0;
-                dLimit = getBody('d', Game.spawns['Spawn1'].room.energyCapacityAvailable).limit;
+                var dLimit = getBody('d', Game.spawns['Spawn1'].room.energyCapacityAvailable).limit;
+                if(typeof(dLimit) == 'undefined') dLimit = 0;
                 for(var i in Memory.sources)
                 {
                     var mem = Memory.sources[i];
@@ -92,7 +93,7 @@ var getBody = function(role, limit)
     limit = Math.floor(limit / 50) * 50;
     var body = bodyDict[role + limit];
     
-    while(typeof(body) == 'undefined')
+    while(typeof(body) == 'undefined' && limit >= 100)
     {
         limit = limit - 50;
         body = bodyDict[role + limit];
@@ -111,7 +112,7 @@ var bodyDict = {
   "d300" : [3, [CARRY, MOVE, WORK, WORK]],
   "r300" : [1, [CARRY, MOVE, WORK]],
   "c300" : [0, [CARRY, MOVE]],
-  "a300" : [1, [TOUGH,TOUGH,TOUGH,TOUGH,ATTACK,ATTACK, MOVE]],
+  "a300" : [1, [TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK, MOVE]],
   
   "h400" : [2, [CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
   "b400" : [3, [CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
@@ -126,6 +127,7 @@ var bodyDict = {
   "u500" : [2, [CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],
   "d500" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK]],
   "c500" : [2, [MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
+  "a500" : [1, [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,ATTACK,RANGED_ATTACK]],
   
   "h600" : [2, [MOVE,MOVE,MOVE,MOVE,WORK,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
   "b600" : [2, [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],

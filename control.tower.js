@@ -1,13 +1,20 @@
-var roleSpawn = {
+var roleTower = {
     run: function()
     {
-        var tower = Game.getObjectById('b79480fdd36188172391de79');
-        if(tower) {
+        var towers = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {filter: (x) => x.structureType == STRUCTURE_TOWER });
+        if(towers.length > 0) {
+            var tower = towers[0];
             var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             if(closestHostile) {
                 tower.attack(closestHostile);
             }
-            else
+            /*else
+            {
+                var enemySt = tower.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
+                console.log(enemySt);
+                tower.attack(enemySt);
+            }*/
+           /* else
             {
                 var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => structure.hits < structure.hitsMax
@@ -16,8 +23,9 @@ var roleSpawn = {
                     tower.repair(closestDamagedStructure);
                 }
             }
+            */
         }
     }
 };
 
-module.exports = roleSpawn;
+module.exports = roleTower;
