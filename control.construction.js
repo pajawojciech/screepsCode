@@ -156,6 +156,33 @@ module.exports = {
                 createConstructionSquare(sp.pos, STRUCTURE_ROAD, false, 3, false);
                 sp.memory.road = true;
             }
+
+            if(ext > 10 && typeof(sp.memory.newTower) == 'undefined' && contB + extB == 0 && cont > 2 && sp.room.controller.level > 3)
+            {
+                var nearbyTower = sp.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_TOWER } );
+                var res;
+                if(nearbyTower.length > 0)
+                {
+                    res = 0;
+                }
+                else
+                {
+                    res = createConstructionSquare(sp.pos, STRUCTURE_TOWER);
+                }
+                if(res == 0)
+                {
+                    sp.memory.newTower = true;
+                }
+            }
+            if(typeof(sp.memory.newTower) != 'undefined' && sp.memory.newTower)
+            {
+                var nearbyTower = sp.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_TOWER } );
+                if(nearbyTower.length > 0)
+                {
+                    sp.memory.newTower = false;
+                    sp.memory.towerId = nearbyTower[0].id;
+                }
+            }
         }
     }
 };
@@ -341,6 +368,17 @@ var initializeMemory = function()
             if(mem.road && Game.time % 10000 == 0)
             {
                 delete mem.road;
+            }
+            
+            if(typeof(mem.towerId) != 'undefined')
+            {
+                var c = Game.getObjectById(mem.towerId);
+                if(c == null)
+                {
+                    console.log("CLEAN TOWER");
+                    delete mem.towerId;
+                    delete mem.newTower;
+                }
             }
         }
     }

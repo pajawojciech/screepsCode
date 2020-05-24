@@ -14,16 +14,15 @@ var roleTower = {
                 console.log(enemySt);
                 tower.attack(enemySt);
             }*/
-           /* else
+            else if(tower.store.getUsedCapacity(RESOURCE_ENERGY) > 700)
             {
                 var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => structure.hits < structure.hitsMax
+                    filter: (structure) => structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL 
                 });
                 if(closestDamagedStructure) {
                     tower.repair(closestDamagedStructure);
                 }
             }
-            */
         }
     }
 };
