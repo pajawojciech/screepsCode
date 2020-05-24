@@ -44,13 +44,16 @@ var roleSpawn = {
                 }
                 if(checkAndCreate('d', d) && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
                 {
-                    checkAndCreate('r');
                     checkAndCreate('c');
-
-                    var ill = Game.spawns['Spawn1'].room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
-                    if(ill.length > 0)
+                    if(typeof(Game.spawns['Spawn1'].memory.towerId) == 'undefined')
                     {
-                        checkAndCreate('he');
+                        checkAndCreate('r');
+
+                        var ill = Game.spawns['Spawn1'].room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
+                        if(ill.length > 0)
+                        {
+                            checkAndCreate('he');
+                        }
                     }
                 }
             }

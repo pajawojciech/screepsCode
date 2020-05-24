@@ -22,6 +22,17 @@ var roleTower = {
                 if(closestDamagedStructure) {
                     tower.repair(closestDamagedStructure);
                 }
+                else
+                {
+                    var ill = tower.pos.findClosestByRange(FIND_MY_CREEPS, {
+                        filter: function(object) {
+                            return object.hits < object.hitsMax;
+                        }
+                    });
+                    if(ill) {
+                        tower.heal(ill);
+                    }
+                }
             }
         }
     }
