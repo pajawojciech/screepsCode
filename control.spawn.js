@@ -45,6 +45,12 @@ var roleSpawn = {
                 {
                     checkAndCreate('r');
                     checkAndCreate('c');
+
+                    var ill = Game.spawns['Spawn1'].room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
+                    if(ill.length > 0)
+                    {
+                        checkAndCreate('he');
+                    }
                 }
             }
         }
@@ -113,14 +119,13 @@ var bodyDict = {
   "r300" : [1, [CARRY, MOVE, WORK]],
   "c300" : [0, [CARRY, MOVE]],
   "a300" : [1, [TOUGH,TOUGH,TOUGH,TOUGH,RANGED_ATTACK, MOVE]],
+  "he300" : [1, [HEAL, MOVE]],
   
   "h400" : [2, [CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
   "b400" : [3, [CARRY, CARRY, CARRY, MOVE, MOVE, WORK]],
   "u400" : [0, [CARRY, MOVE, WORK, WORK, WORK]],
   "d400" : [2, [CARRY, MOVE, WORK, WORK, WORK]],
   "c400" : [2, [CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]],
-  
-  "r450" : [1, [MOVE,WORK,CARRY,HEAL]],
 
   "h500" : [2, [CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, WORK]],
   "b500" : [3, [CARRY, CARRY, CARRY, MOVE, WORK, WORK, WORK]],

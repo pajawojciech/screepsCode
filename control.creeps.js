@@ -5,6 +5,7 @@ var roleDigger = require('creep.digger');
 var roleCarrier = require('creep.carrier');
 var roleRepairer = require('creep.repairer');
 var roleAttacker = require('creep.attacker');
+var roleHealer = require('creep.healer');
 
 module.exports = {
     run: function()
@@ -39,6 +40,9 @@ module.exports = {
             }
             if(creep.memory.role == 'a') {
                 roleAttacker.run(creep);
+            }
+            if(creep.memory.role == 'he') {
+                roleHealer.run(creep);
             }
         }
     }
