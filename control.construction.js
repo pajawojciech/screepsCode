@@ -183,6 +183,11 @@ module.exports = {
                     sp.memory.towerId = nearbyTower[0].id;
                 }
             }
+            
+            if(typeof(room.storage) == 'undefined' && room.controller.level > 4)
+            {
+                createConstructionSquare(sp.pos, STRUCTURE_STORAGE);
+            }
         }
     }
 };

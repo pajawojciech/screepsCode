@@ -42,6 +42,10 @@ var roleCarrier = {
                 {
                     creep.memory.targetId = target.id;
                 }
+                else if(typeof(creep.room.storage) != 'undefined')
+                {
+                    creep.memory.targetId = creep.room.storage.id;
+                }
 	        }
 	        
 	        var target = Game.getObjectById(creep.memory.targetId);
