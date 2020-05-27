@@ -7,12 +7,17 @@ var roleHarvester = {
                 return (
                     (structure.structureType == STRUCTURE_EXTENSION ||
                     structure.structureType == STRUCTURE_SPAWN ) && 
-                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0) 
-                    || (structure.structureType == STRUCTURE_TOWER && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 150);
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
             }
         });
         
         if(target == null) {
+            target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => structure.structureType == STRUCTURE_TOWER && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 150
+            });
+        }
+        
+        if(target == null){
             return false;
         }
         

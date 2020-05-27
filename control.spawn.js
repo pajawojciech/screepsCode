@@ -2,11 +2,11 @@ var roleSpawn = {
     run: function()
     {
         if(Game.spawns['Spawn1'].spawning != null) return;
-        if(Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0)
-        {
-            checkAndCreate('a', 5);
-        }
-        
+        //if(Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0)
+        //{
+            //checkAndCreate('a', 1);
+        //}
+
         if(checkAndCreate('h'))
         {
             if(Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0)
@@ -45,10 +45,10 @@ var roleSpawn = {
                 if(checkAndCreate('d', d) && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
                 {
                     checkAndCreate('c');
+                    checkAndCreate('r');
+
                     if(typeof(Game.spawns['Spawn1'].memory.towerId) == 'undefined')
                     {
-                        checkAndCreate('r');
-
                         var ill = Game.spawns['Spawn1'].room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
                         if(ill.length > 0)
                         {
@@ -135,6 +135,7 @@ var bodyDict = {
   "b500" : [3, [CARRY, CARRY, CARRY, MOVE, WORK, WORK, WORK]],
   "u500" : [2, [CARRY, CARRY, MOVE, MOVE, WORK, WORK, WORK]],
   "d500" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK]],
+  "r500" : [1, [MOVE,MOVE,WORK,WORK,CARRY,CARRY,CARRY,CARRY]],
   "c500" : [2, [MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
   "a500" : [1, [TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,TOUGH,MOVE,ATTACK,RANGED_ATTACK]],
   
@@ -144,12 +145,14 @@ var bodyDict = {
   "d600" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK]],
   "c600" : [3, [MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
   
+  "r700" :[1, [MOVE,MOVE,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY]],
+  
   "d800" : [1, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
   "c800" : [3, [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
   
   "d1000" : [1, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
-  "c1000" : [4, [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
-  "u1000" : [1, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
+  "c1000" : [2, [MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,MOVE,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY]],
+  "u1000" : [2, [CARRY, MOVE, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK]],
 };
 
 module.exports = roleSpawn;

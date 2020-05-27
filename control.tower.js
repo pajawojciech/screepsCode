@@ -16,10 +16,11 @@ var roleTower = {
                     console.log(enemySt);
                     tower.attack(enemySt);
                 }*/
-                else if(tower.store.getUsedCapacity(RESOURCE_ENERGY) > 700)
+                else if(tower.store.getUsedCapacity(RESOURCE_ENERGY) > 500)
                 {
                     var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                        filter: (structure) => structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL 
+                        filter: (structure) => structure.hits < structure.hitsMax && 
+                        ((structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) || structure.hits < 100000)
                     });
                     if(closestDamagedStructure) {
                         tower.repair(closestDamagedStructure);

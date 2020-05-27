@@ -18,7 +18,7 @@ module.exports = {
         {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_CONTAINER) && 
-                    structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                    structure.store.getUsedCapacity(RESOURCE_ENERGY) > 50;
             }
         });
 
