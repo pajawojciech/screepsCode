@@ -64,7 +64,7 @@ var roleSpawn = {
 var checkAndCreate = function(role, limit) //zwraca informację, czy limit spełniony
 {
     var sp = Game.spawns['Spawn1'];
-    var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.ticksToLive > 50);
+    var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role && (creep.ticksToLive > 50 || creep.ticksToLive <=0));
 	var energyCap = Game.spawns['Spawn1'].room.energyCapacityAvailable;
 	
 	if((role == 'h' || role == 'd') && cr.length == 0)

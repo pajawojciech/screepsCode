@@ -188,6 +188,78 @@ module.exports = {
             {
                 createConstructionSquare(sp.pos, STRUCTURE_STORAGE);
             }
+
+            if(typeof(sp.memory.wall) == 'undefined')
+            {
+                var exits = room.find(FIND_EXIT);
+                var exitPrev = null;
+                var i = 0;
+                for(var e in exits)
+                {
+                    i++;
+                    var exit = exits[e];
+                    if(exitPrev != null && (
+                        (exit.x - exitPrev.x != 1 && (exitPrev.y == 0 || exitPrev.y == 49)) 
+                            || 
+                        (exit.y - exitPrev.y != 1 && (exitPrev.x == 0 || exitPrev.x == 49)) 
+                    ))
+                    {
+                        exitPrev = null;
+                        exits[Math.floor(e - i / 2)].entrance = true;
+                        i = 0;
+                    }
+                    exitPrev = exit;
+                }
+                exits[Math.floor(e - i / 2)].entrance = true;
+                
+                var wallArray = [];
+                
+                for(var e in exits)
+                {
+                    var exit = exits[e];
+                    var wallPos = {
+                        x : exit.x,
+                        y : exit.y
+                    }
+                    wallPos.entrance = typeof(exit.entrance) != 'undefined';
+                    wallArray.push(wallPos);
+                }
+                sp.memory.wall = wallArray;
+            }
+            else if(sp.memory.wall.length > 0)
+            {
+                var wallIndex = sp.memory.wall.findIndex((x) => x.entrance === true);
+                if(wallIndex != -1)
+                {
+                    var entrance = sp.memory.wall.splice(wallIndex, 1)[0];
+                    room.createConstructionSite(entrance.x, entrance.y - 2, STRUCTURE_RAMPART);
+                    room.createConstructionSite(entrance.x, entrance.y + 2, STRUCTURE_RAMPART);
+                    room.createConstructionSite(entrance.x - 2, entrance.y, STRUCTURE_RAMPART);
+                    room.createConstructionSite(entrance.x + 2, entrance.y, STRUCTURE_RAMPART);
+                }
+                else
+                {
+                    wallIndex = sp.memory.wall.findIndex((x) => x.entrance === false);
+                    
+                    var entrance = sp.memory.wall.splice(wallIndex, 1)[0];
+                    room.createConstructionSite(entrance.x + 2, entrance.y - 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x + 1, entrance.y - 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x + 0, entrance.y - 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x - 1, entrance.y - 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x - 2, entrance.y - 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x + 2, entrance.y + 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x + 1, entrance.y + 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x + 0, entrance.y + 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x - 1, entrance.y + 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x - 2, entrance.y + 2, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x - 2, entrance.y + 1, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x - 2, entrance.y + 0, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x - 2, entrance.y - 1, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x + 2, entrance.y + 1, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x + 2, entrance.y + 0, STRUCTURE_WALL);
+                    room.createConstructionSite(entrance.x + 2, entrance.y - 1, STRUCTURE_WALL);
+                }
+            }
         }
     }
 };
