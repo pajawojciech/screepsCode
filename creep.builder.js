@@ -16,8 +16,16 @@ var roleBuilder = {
 
 	    if(creep.memory.building) {
 	        var target = creep.pos.findClosestByRange(targets);
-            if(creep.build(target) == ERR_NOT_IN_RANGE) {
+	        var res = creep.build(target) ;
+            if(res == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target);
+            }
+            else if(res == ERR_INVALID_TARGET)
+            {
+                if(creep.pos.x == target.pos.x && creep.pos.y == target.pos.y)
+                {
+                    creep.move(Math.floor(Math.random() * 8 + 1));
+                }
             }
 	    }
 	    else {
