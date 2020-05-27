@@ -449,7 +449,7 @@ var initializeMemory = function()
             
             if(Game.time % 1000 == 0)
             {
-                delete mem.wall;
+                //delete mem.wall;
             }
             
             if(typeof(mem.towerId) != 'undefined')
