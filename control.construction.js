@@ -445,6 +445,10 @@ var initializeMemory = function()
             if(mem.road && Game.time % 10000 == 0)
             {
                 delete mem.road;
+            }
+            
+            if(Game.time % 1000 == 0)
+            {
                 delete mem.wall;
             }
             

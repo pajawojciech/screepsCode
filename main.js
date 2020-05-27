@@ -4,7 +4,7 @@ var creeps = require('control.creeps');
 var tower = require('control.tower');
 
 module.exports.loop = function () {
-    
+
     constructor.run();
     spawner.run(); 
     creeps.run();
