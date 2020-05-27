@@ -18,10 +18,22 @@ var roleTower = {
                 }*/
                 else if(tower.store.getUsedCapacity(RESOURCE_ENERGY) > 500)
                 {
-                    var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                    var structures = tower.room.find(FIND_STRUCTURES, {
                         filter: (structure) => structure.hits < structure.hitsMax && 
                         ((structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART) || structure.hits < 100000)
                     });
+
+                    var newRampart = structures.find((x) => x.structureType == STRUCTURE_RAMPART && x.hits < 1000);
+                    var closestDamagedStructure;
+                    if(typeof(newRampart) == 'undefined')
+                    {
+                        closestDamagedStructure = structures[0];
+                    }
+                    else
+                    {
+                        closestDamagedStructure = newRampart;
+                    }
+
                     if(closestDamagedStructure) {
                         tower.repair(closestDamagedStructure);
                     }

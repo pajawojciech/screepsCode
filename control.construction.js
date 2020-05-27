@@ -445,6 +445,7 @@ var initializeMemory = function()
             if(mem.road && Game.time % 10000 == 0)
             {
                 delete mem.road;
+                delete mem.wall;
             }
             
             if(typeof(mem.towerId) != 'undefined')
