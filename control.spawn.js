@@ -57,6 +57,11 @@ var roleSpawn = {
                             checkAndCreate('he');
                         }
                     }
+
+                    if(typeof(Memory.claim) != 'undefined')
+                    {
+                        checkAndCreate('cl');
+                    }
                 }
             }
         }
@@ -66,7 +71,7 @@ var roleSpawn = {
 var checkAndCreate = function(role, limit) //zwraca informację, czy limit spełniony
 {
     var sp = Game.spawns['Spawn1'];
-    var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role && (creep.ticksToLive > 50 || creep.ticksToLive <=0));
+    var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role && (creep.ticksToLive > 50 || typeof(creep.ticksToLive) == 'undefined'));
 	var energyCap = Game.spawns['Spawn1'].room.energyCapacityAvailable;
 	
 	if((role == 'h' || role == 'd') && cr.length == 0)
@@ -83,7 +88,7 @@ var checkAndCreate = function(role, limit) //zwraca informację, czy limit speł
 	if(cr.length < limit) {
 		var newName = role + Game.time;
         var body = conf.body;
-		var res = Game.spawns['Spawn1'].spawnCreep(body, newName, {memory: {role: role}});
+		var res = Game.spawns['Spawn1'].spawnCreep(body, newName, {memory: {role: role, room: sp.room.name }});
 		if(res == 0)
 		{
 		    console.log('Spawning new ' + newName);

@@ -2,18 +2,6 @@ var utils = require('utils.creep');
 
 var roleRepairer = {
     run: function(creep) {
-        if(false)
-        {
-            var g = Game.getObjectById('5e20c55126765a7544220112'); 
-            
-            var res = creep.dismantle(g);
-            if(res == ERR_NOT_IN_RANGE) {
-                creep.moveTo(g);
-            }
-            //creep.say(res);
-            return;
-        }
-
         if(creep.memory.work && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.work = false;
             delete creep.memory.targetId;
