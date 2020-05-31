@@ -49,7 +49,7 @@ module.exports = {
             //jeśli jest max extensionów buduj kontenery do reszty source
             if(extensions == ERR_RCL_NOT_ENOUGH && contB + extB == 0 && sp.room.controller.level > 1)
             {
-                var sources = Memory.sources.filter(function(x) { return typeof(x.containerId) == 'undefined' } );
+                var sources = Memory.sources.filter(function(x) { return typeof(x.newContainer) == 'undefined' } );
                 if(sources.length > 0)
                 {
                     var source = Game.getObjectById(sources[0].sourceId);
@@ -65,7 +65,7 @@ module.exports = {
                     }
                     if(res == 0)
                     {
-                        Memory.sources.find(function (x) { return x.sourceId == source.id; }).newContainer = true;
+                        sources[0].newContainer = true;
                     }
                 }
                 else //drogi
