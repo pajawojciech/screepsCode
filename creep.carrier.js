@@ -2,6 +2,7 @@ var roleCarrier = {
     run: function(creep) {
 	    if(creep.store.getUsedCapacity() == 0) 
 	    {
+	        delete creep.memory.targetId;
 	        if(typeof(creep.memory.containerId) == 'undefined')
 	        {
     	        var s = Memory.sources
@@ -27,20 +28,21 @@ var roleCarrier = {
         }
         else 
         {
+            delete creep.memory.containerId;
             var x = Memory.sources.map((x) => x.containerId);
             if(typeof(creep.memory.targetId) == 'undefined')
 	        {
-    	        var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+    	        var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_CONTAINER) 
                     && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     && !(x.includes(structure.id));
                     }
-                });    
+                });
 
-                if(target != null)
+                if(targets.length > 0)
                 {
-                    creep.memory.targetId = target.id;
+                    creep.memory.targetId = minEnergy(targets).id;
                 }
                 else if(typeof(creep.room.storage) != 'undefined')
                 {
@@ -63,6 +65,27 @@ var roleCarrier = {
         }
 	}
 };
+
+var minEnergy = function(targets)
+{
+    var res;
+    for(var t in targets)
+    {
+        var temp = targets[t];
+        if(typeof(res) == 'undefined')
+        {
+            res = temp;
+        }
+        else
+        {
+            if(res.store.getUsedCapacity(RESOURCE_ENERGY) > temp.store.getUsedCapacity(RESOURCE_ENERGY))
+            {
+                res = temp;
+            }
+        }
+    }
+    return res;
+}
 
 var sortContainers = function(x,y) 
 {

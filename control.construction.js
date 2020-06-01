@@ -33,7 +33,7 @@ module.exports = {
             }
             
             //ustaw memory sources containerId
-            if(Memory.sources.filter(function(x) { return x.newContainer; } ).length > 0)
+            if(typeof(Memory.sources) != 'undefined' && Memory.sources.filter(function(x) { return x.newContainer; } ).length > 0)
             {
                 var sourceMem = Memory.sources.find(function(x) { return x.newContainer; } );
                 var obj = Game.getObjectById(sourceMem.sourceId);
@@ -349,17 +349,6 @@ var createConstructionSquare = function(pos, type, even = true, range = 5, one =
     }
 };
 
-var nearbyArr = 
-[
-    [-1,-1],
-    [-1, 0],
-    [-1, 1],
-    [0, -1],
-    [0,  1],
-    [1, -1],
-    [1,  0],
-    [1,  1]
-];
 
 
 
