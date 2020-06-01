@@ -11,7 +11,7 @@ var roleSpawn = {
 
         if(checkAndCreate('h'))
         {
-            if(Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0)
+            if(Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0)
             {
                 checkAndCreate('b');
             }

@@ -11,6 +11,26 @@ var roleRepairer = {
 	    }
         
 	    if(creep.memory.work) {
+	        var targets = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType == STRUCTURE_WALL || x.structureType == STRUCTURE_RAMPART});
+	        if(targets.length > 0)
+	        {
+	            creep.say('build');
+    	        var target = creep.pos.findClosestByRange(targets);
+    	        var res = creep.build(target) ;
+                if(res == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
+                }
+                else if(res == ERR_INVALID_TARGET)
+                {
+                    if(creep.pos.x == target.pos.x && creep.pos.y == target.pos.y)
+                    {
+                        creep.move(Math.floor(Math.random() * 8 + 1));
+                    }
+                }
+                delete creep.memory.targetId;
+                return;
+	        }
+	        
 	        var target;
 	        if(typeof(creep.memory.targetId) == 'undefined')
 	        {

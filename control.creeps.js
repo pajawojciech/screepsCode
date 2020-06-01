@@ -27,7 +27,7 @@ module.exports = {
             if(creep.memory.role == 'b') {
                 if(!roleBuilder.run(creep))
                 {
-                    roleUpgrader.run(creep);
+                    roleRepairer.run(creep);
                 }
             }
             if(creep.memory.role == 'd') {
