@@ -40,7 +40,7 @@ var roleCarrier = {
                     }
                 });
 
-                if(targets.length > 0)
+                if(targets.length > 0 && Game.time % 100 != 0)
                 {
                     creep.memory.targetId = minEnergy(targets).id;
                 }
