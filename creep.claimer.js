@@ -1,6 +1,6 @@
 var role = {
     run: function(creep) {
-        var roomName = Memory.claim[0];
+        var roomName = Memory.claim[0].room;
         if(roomName != creep.room.name)
         {
             var direction = creep.room.findExitTo(roomName);

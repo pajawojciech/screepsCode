@@ -13,10 +13,10 @@ var roleSpawn = {
 
         if(checkAndCreate('h'))
         {
-            var b = Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0 ? getBody('b', eca) : 0;
+            var b = Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0 ? getBody('b', eca).limit : 0;
             for(var i in Memory.claim)
             {
-                var roomName = Memory.claim[i];
+                var roomName = Memory.claim[i].room;
                 if(Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.my }).length > 0)
                 {
                     b++;
@@ -63,7 +63,7 @@ var roleSpawn = {
                 }
                 if(checkAndCreate('d', d) && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
                 {
-                    checkAndCreate('c');
+                    checkAndCreate('c', Memory.sources.length);
                     checkAndCreate('r');
 
                     if(typeof(Game.spawns['Spawn1'].memory.towerId) == 'undefined')

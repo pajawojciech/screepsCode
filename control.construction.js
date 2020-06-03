@@ -73,20 +73,21 @@ module.exports = {
                     var source = Memory.sources.find(function(x) { return typeof(x.road) == 'undefined' } );
                     if(typeof(source) != 'undefined')
                     {
-                        var cont = Game.getObjectById(source.sourceId);
-                
-                        var path = room.findPath(cont.pos, sp.pos, { ignoreCreeps: true, ignoreRoads: true, swampCost: 1 });
-                        for(var pos in path)
+                        //var cont = Game.getObjectById(source.sourceId);
+                        var path = PathFinder.search(cont.pos, sp.pos, { roomCallback: roadPathCost, plainCost: 2, swampCost: 10 });
+                        for(var pos in path.path)
                         {
-                            room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
+                            var pos = path.path[pos];
+                            new RoomVisual(pos.roomName).circle(pos.x, pos.y);
+                            Game.rooms[pos.roomName].createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
                         }
                         
-                        var path = room.findPath(cont.pos, controller.pos, { ignoreCreeps: true, ignoreRoads: true, swampCost: 1 });
-                        path.splice(path.length - 1, 1);
-                        for(var pos in path)
-                        {
-                            room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
-                        }
+                        //var path = room.findPath(cont.pos, controller.pos, { ignoreCreeps: true, ignoreRoads: true, swampCost: 1 });
+                        //path.splice(path.length - 1, 1);
+                        //for(var pos in path)
+                        //{
+                            //room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
+                        //}
                         
                         source.road = true;
                     }
@@ -350,7 +351,32 @@ var createConstructionSquare = function(pos, type, even = true, range = 5, one =
 };
 
 
+var roadPathCost = function(roomName) {
 
+    let room = Game.rooms[roomName];
+    if (!room) return;
+    let costs = new PathFinder.CostMatrix;
+    
+    room.find(FIND_STRUCTURES).forEach(function(struct) 
+    {
+        if (struct.structureType === STRUCTURE_ROAD) 
+        {
+            costs.set(struct.pos.x, struct.pos.y, 1);
+        }
+        else if (struct.structureType !== STRUCTURE_CONTAINER && (struct.structureType !== STRUCTURE_RAMPART || !struct.my)) 
+        {
+            // Can't walk through non-walkable buildings
+            costs.set(struct.pos.x, struct.pos.y, 0xff);
+        }
+    });
+    
+    room.find(FIND_CONSTRUCTION_SITES, {filter: (x) => x.structureType == STRUCTURE_ROAD}).forEach(function(struct) 
+    {
+        costs.set(struct.pos.x, struct.pos.y, 1);
+    });
+    
+    return costs;
+}
 
 
 

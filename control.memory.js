@@ -1,6 +1,7 @@
 /* 
 MEMORY
--claim[] - tablica stringów z nazwami pokoi do zdobycia
+-claim[]
+    -room
 -creeps[]
     -role
     -room
@@ -147,6 +148,31 @@ module.exports = { run: function()
                     console.log("CLEAN TOWER");
                     delete mem.towerId;
                     delete mem.newTower;
+                }
+            }
+        }
+        
+        var sourcesMemory = Memory.sources.map((x) => x.sourceId);
+        
+        for(var i in Memory.claim)
+        {
+            var room = Game.rooms[Memory.claim[i].room];
+            if(typeof(room) != 'undefined')
+            {
+                var controller = room.controller;
+                if(controller.reservation.ticksToEnd > 4900)
+                {
+                    var sources = room.find(FIND_SOURCES);
+                    for(var i in sources)
+                    {
+                        var source = sources[i];
+                        if(!sourcesMemory.includes(source.id))
+                        {
+                            var item = { "sourceId" : source.id, "space" : 1, "ext" : true };
+                            Memory.sources.push(item);
+                            console.log('ADD EXT SOURCE');
+                        }
+                    }    
                 }
             }
         }

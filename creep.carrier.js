@@ -48,6 +48,10 @@ var roleCarrier = {
                 {
                     creep.memory.targetId = creep.room.storage.id;
                 }
+                else
+                {
+                    creep.moveTo(Game.rooms[creep.memory.room].controller);
+                }
 	        }
 	        
 	        var target = Game.getObjectById(creep.memory.targetId);
