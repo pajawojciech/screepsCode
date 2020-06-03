@@ -4,6 +4,8 @@ var roleSpawn = {
     run: function()
     {
         if(Game.spawns['Spawn1'].spawning != null) return;
+        var eca = Game.spawns['Spawn1'].room.energyCapacityAvailable;
+        
         //if(Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0)
         //{
             //checkAndCreate('a', 1);
@@ -11,10 +13,25 @@ var roleSpawn = {
 
         if(checkAndCreate('h'))
         {
-            if(Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0)
+            var b = Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0 ? getBody('b', eca) : 0;
+            for(var i in Memory.claim)
             {
-                checkAndCreate('b');
+                var roomName = Memory.claim[i];
+                if(Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.my }).length > 0)
+                {
+                    b++;
+                    var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && creep.memory.destRoom == roomName).length; 
+                    if(cr < 1)
+                    {
+                        var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && typeof(creep.memory.destRoom) == 'undefined');
+                        if(crFree.length > 0)
+                        {
+                            crFree[0].memory.destRoom = roomName;
+                        }
+                    }
+                }
             }
+            checkAndCreate('b', b);
             
             var d = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
             if(d > 0)
@@ -22,7 +39,7 @@ var roleSpawn = {
                 checkAndCreate('u');
 
                 d = 0;
-                var dLimit = getBody('d', Game.spawns['Spawn1'].room.energyCapacityAvailable).limit;
+                var dLimit = getBody('d', eca).limit;
                 if(typeof(dLimit) == 'undefined') dLimit = 0;
                 for(var i in Memory.sources)
                 {

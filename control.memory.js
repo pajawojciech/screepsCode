@@ -1,8 +1,24 @@
-/*
+/* 
 MEMORY
+-claim[] - tablica stringów z nazwami pokoi do zdobycia
 -creeps[]
     -role
     -room
+    >b
+        -destRoom
+        -building
+    >c
+        -targetId
+        -containerId
+    >d
+        -sourceId
+    >h
+        -transf
+    >r
+        -work
+        -targetId
+    >u
+        -upgrading
 -sources[]
     -sourceId
     -space - miejsce wokół source

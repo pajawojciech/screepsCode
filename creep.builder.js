@@ -2,8 +2,21 @@ var utils = require('utils.creep');
 
 var roleBuilder = {
     run: function(creep) {
+        var roomName = creep.memory.destRoom;
+        if(typeof(roomName) == 'undefined')
+        {
+            roomName = creep.memory.room;
+        }
+        
+        if(roomName != creep.room.name)
+        {
+            creep.moveTo(Game.rooms[roomName].controller);
+            return true;
+        }
+        
         var targets = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART});
         if(targets.length == 0) {
+            delete creep.memory.destRoom;
             return false;
         }
 
