@@ -1,3 +1,27 @@
+/*
+MEMORY
+-creeps[]
+    -role
+    -room
+-sources[]
+    -sourceId
+    -space - miejsce wokół source
+    -newContainer - powstało construction site, false jeśli zbudowane
+    -containerId
+    -road - droga wyznaczona do controller i spawn
+-spawns[]
+    newContainer
+    containerId
+    containerCount - kontenery w pomieszczeniu
+    newContainer2
+    containerId2
+    newTower
+    towerId
+	wall
+    road - droga wokół spawna i extensionów
+*/
+
+
 module.exports = { run: function()
 {
     if(typeof(Memory.sources) == 'undefined')
