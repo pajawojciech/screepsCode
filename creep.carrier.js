@@ -7,20 +7,32 @@ var roleCarrier = {
 	        delete creep.memory.targetId;
 	        if(typeof(creep.memory.containerId) == 'undefined')
 	        {
-    	        var s = Memory.sources
-    	            .filter((x) => typeof(x.containerId) != 'undefined' )
-    	            .map((x) => x.containerId)
-    	            .sort(sortContainers);
+	            if(typeof(creep.memory.assignedCont) != 'undefined')
+	            {
+	                var ac = Game.getObjectById(creep.memory.assignedCont);
+	                if(ac.store.getUsedCapacity(RESOURCE_ENERGY) > 300)
+	                {
+	                    creep.memory.containerId = creep.memory.assignedCont;
+	                }
+	            }
+	            
+	            if(typeof(creep.memory.containerId) == 'undefined')
+	            {
+        	        var s = Memory.sources
+        	            .filter((x) => typeof(x.containerId) != 'undefined' )
+        	            .map((x) => x.containerId)
+        	            .sort(sortContainers);
 
-                if(s.length > 0)
-                {
-                    creep.memory.containerId = s[0];
-                }
+                    if(s.length > 0)
+                    {
+                        creep.memory.containerId = s[0];
+                    }
                 
-                if(GET_FROM_STORAGE && creep.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
-                {
-                    creep.memory.containerId = creep.room.storage.id;
-                }
+                    if(GET_FROM_STORAGE && creep.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
+                    {
+                        creep.memory.containerId = creep.room.storage.id;
+                    }
+	            }
 	        }
                 
             var c = Game.getObjectById(creep.memory.containerId);

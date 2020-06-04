@@ -11,6 +11,7 @@ MEMORY
     >c
         -targetId
         -containerId
+        -assignedCont
     >d
         -sourceId
     >h
@@ -18,6 +19,7 @@ MEMORY
     >r
         -work
         -targetId
+        -destRoom
     >u
         -upgrading
 -sources[]

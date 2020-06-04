@@ -23,7 +23,9 @@ var roleSpawn = {
                 d = prepareD();
                 if(checkAndCreate('d', d) && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
                 {
+                    prepareC();
                     checkAndCreate('c', Memory.sources.length);
+                    
                     var r = prepareR();
                     checkAndCreate('r', r);
 
@@ -160,6 +162,24 @@ var prepareD = function()
         }
     }
     return d;
+}
+
+var prepareC = function()
+{
+    var sources = Memory.sources.filter((x) => typeof(x.containerId) != 'undefined' );
+    for(var i in sources)
+    {
+        var source = sources[i];
+        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.assignedCont == source.containerId).length; 
+        if(cr < 1)
+        {
+            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && typeof(creep.memory.assignedCont) == 'undefined');
+            if(crFree.length > 0)
+            {
+                crFree[0].memory.assignedCont = source.containerId;
+            }
+        }
+    }
 }
 
 var getBody = function(role, limit)
