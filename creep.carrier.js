@@ -1,5 +1,7 @@
 var roleCarrier = {
     run: function(creep) {
+        var GET_FROM_STORAGE = false;
+        
 	    if(creep.store.getUsedCapacity() == 0) 
 	    {
 	        delete creep.memory.targetId;
@@ -13,6 +15,11 @@ var roleCarrier = {
                 if(s.length > 0)
                 {
                     creep.memory.containerId = s[0];
+                }
+                
+                if(GET_FROM_STORAGE && creep.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
+                {
+                    creep.memory.containerId = creep.room.storage.id;
                 }
 	        }
                 

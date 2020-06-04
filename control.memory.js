@@ -160,7 +160,7 @@ module.exports = { run: function()
             if(typeof(room) != 'undefined')
             {
                 var controller = room.controller;
-                if(controller.reservation.ticksToEnd > 4900)
+                if(typeof(controller.reservation) != 'undefined' && controller.reservation.ticksToEnd > 1000)
                 {
                     var sources = room.find(FIND_SOURCES);
                     for(var i in sources)

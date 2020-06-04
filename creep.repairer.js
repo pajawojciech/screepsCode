@@ -2,6 +2,19 @@ var utils = require('utils.creep');
 
 var roleRepairer = {
     run: function(creep) {
+        var roomName = creep.memory.destRoom;
+        if(typeof(roomName) == 'undefined')
+        {
+            roomName = creep.memory.room;
+        }
+
+        if(roomName != creep.room.name)
+        {
+            delete creep.memory.targetId;
+            creep.moveTo(Game.rooms[roomName].controller);
+            return true;
+        }
+        
         if(creep.memory.work && creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.work = false;
             delete creep.memory.targetId;
@@ -14,7 +27,6 @@ var roleRepairer = {
 	        var targets = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType == STRUCTURE_WALL || x.structureType == STRUCTURE_RAMPART});
 	        if(targets.length > 0)
 	        {
-	            creep.say('build');
     	        var target = creep.pos.findClosestByRange(targets);
     	        var res = creep.build(target) ;
                 if(res == ERR_NOT_IN_RANGE) {
@@ -35,7 +47,8 @@ var roleRepairer = {
 	        if(typeof(creep.memory.targetId) == 'undefined')
 	        {
 	            var targets;
-	            if(typeof(Game.spawns['Spawn1'].memory.towerId) == 'undefined')
+	            var sp = creep.room.spawn;
+	            if(typeof(sp) == 'undefined' || typeof(sp.memory.towerId) == 'undefined')
 	            {
 	                targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
