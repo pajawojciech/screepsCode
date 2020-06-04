@@ -10,7 +10,7 @@ var roleBuilder = {
         
         if(roomName != creep.room.name)
         {
-            creep.moveTo(Game.rooms[roomName].controller);
+            utils.goToRoom(creep, roomName);
             return true;
         }
         

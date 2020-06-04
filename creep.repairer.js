@@ -11,7 +11,7 @@ var roleRepairer = {
         if(roomName != creep.room.name)
         {
             delete creep.memory.targetId;
-            creep.moveTo(Game.rooms[roomName].controller);
+            utils.goToRoom(creep, roomName);
             return true;
         }
         

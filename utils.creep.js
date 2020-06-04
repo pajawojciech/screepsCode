@@ -56,6 +56,28 @@ module.exports = {
 
         var closestSource = creep.pos.findClosestByRange(sources);
         creep.moveTo(closestSource);
+    },
+    
+    goToRoom : function (creep, roomName)
+    {
+        var room = Game.rooms[roomName];
+        if(typeof(room) != 'undefined')
+        {
+            creep.moveTo(Game.rooms[roomName].controller);
+        }
+        else
+        {
+            var direction = creep.room.findExitTo(roomName);
+            var exit = creep.pos.findClosestByPath(direction);
+            if(typeof(exit) != 'undefined' && exit != null)
+            {
+                creep.moveTo(exit);
+            }
+            else
+            {
+                creep.say('error');
+            }
+        }
     }
     
 };
