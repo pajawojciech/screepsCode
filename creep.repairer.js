@@ -47,7 +47,13 @@ var roleRepairer = {
 	        if(typeof(creep.memory.targetId) == 'undefined')
 	        {
 	            var targets;
-	            var sp = creep.room.spawn;
+	            var spArr = creep.room.find(FIND_STRUCTURES, {filter: (x) => x.structureType == STRUCTURE_SPAWN});
+	            var sp;
+	            if(spArr.length > 0)
+	            {
+	                sp = spArr[0];
+	            }
+
 	            if(typeof(sp) == 'undefined' || typeof(sp.memory.towerId) == 'undefined')
 	            {
 	                targets = creep.room.find(FIND_STRUCTURES, {
@@ -63,7 +69,7 @@ var roleRepairer = {
 	            {
 	                targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART && structure.hits != structure.hitsMax);
+                        return ((structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART) && structure.hits != structure.hitsMax);
                         }
                     });
                     target = targets.sort(sortStructuresByHits2)[0];
