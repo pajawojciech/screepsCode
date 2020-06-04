@@ -73,7 +73,7 @@ module.exports = {
                     var source = Memory.sources.find(function(x) { return typeof(x.road) == 'undefined' } );
                     if(typeof(source) != 'undefined')
                     {
-                        //var cont = Game.getObjectById(source.sourceId);
+                        var cont = Game.getObjectById(source.sourceId);
                         var path = PathFinder.search(cont.pos, sp.pos, { roomCallback: roadPathCost, plainCost: 2, swampCost: 10 });
                         for(var pos in path.path)
                         {

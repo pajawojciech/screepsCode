@@ -17,7 +17,8 @@ var roleSpawn = {
             for(var i in Memory.claim)
             {
                 var roomName = Memory.claim[i].room;
-                if(Game.rooms[roomName].find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.my }).length > 0)
+                var claimRoom = Game.rooms[roomName];
+                if(typeof(claimRoom) != 'undefined' && claimRoom.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.my }).length > 0)
                 {
                     b++;
                     var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && creep.memory.destRoom == roomName).length; 
