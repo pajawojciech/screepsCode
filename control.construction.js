@@ -82,7 +82,7 @@ module.exports = {
                             Game.rooms[pos.roomName].createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
                         }
                         
-                        var path = PathFinder.search(cont.pos, { pos: controller.pos, range: 1 }, { roomCallback: roadPathCost, plainCost: 2, swampCost: 4 });
+                        var path = PathFinder.search(cont.pos, { pos: cont.room.controller.pos, range: 1 }, { roomCallback: roadPathCost, plainCost: 2, swampCost: 4 });
                         for(var pos in path.path)
                         {
                             var pos = path.path[pos];

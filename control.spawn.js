@@ -40,7 +40,8 @@ var roleSpawn = {
 
                     if(typeof(Memory.claim) != 'undefined')
                     {
-                        checkAndCreate('cl');
+                        var cl = prepareCL();
+                        checkAndCreate('cl', cl);
                     }
                 }
             }
@@ -180,6 +181,24 @@ var prepareC = function()
             }
         }
     }
+}
+
+var prepareCL = function()
+{
+    for(var i in Memory.claim)
+    {
+        var roomName = Memory.claim[i].room;
+        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.claim == roomName).length; 
+        if(cr < 1)
+        {
+            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && typeof(creep.memory.claim) == 'undefined');
+            if(crFree.length > 0)
+            {
+                crFree[0].memory.claim = roomName;
+            }
+        }
+    }
+    return Memory.claim.length;
 }
 
 var getBody = function(role, limit)

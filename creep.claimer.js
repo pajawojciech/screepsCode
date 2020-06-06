@@ -4,7 +4,7 @@ var role = {
     run: function(creep) {
         if(Memory.claim.length == 0) return;
         
-        var roomName = Memory.claim[0].room;
+        var roomName = creep.memory.claim;
         if(roomName != creep.room.name)
         {
             utils.goToRoom(creep, roomName);
