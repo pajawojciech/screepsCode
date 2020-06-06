@@ -74,7 +74,7 @@ module.exports = {
                     if(typeof(source) != 'undefined')
                     {
                         var cont = Game.getObjectById(source.sourceId);
-                        var path = PathFinder.search(cont.pos, sp.pos, { roomCallback: roadPathCost, plainCost: 2, swampCost: 10 });
+                        var path = PathFinder.search(cont.pos, sp.pos, { roomCallback: roadPathCost, plainCost: 1, swampCost: 4 });
                         for(var pos in path.path)
                         {
                             var pos = path.path[pos];
@@ -82,13 +82,13 @@ module.exports = {
                             Game.rooms[pos.roomName].createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
                         }
                         
-                        //var path = room.findPath(cont.pos, controller.pos, { ignoreCreeps: true, ignoreRoads: true, swampCost: 1 });
-                        //path.splice(path.length - 1, 1);
-                        //for(var pos in path)
-                        //{
-                            //room.createConstructionSite(path[pos].x, path[pos].y, STRUCTURE_ROAD);
-                        //}
-                        
+                        var path = PathFinder.search(cont.pos, { pos: controller.pos, range: 1 }, { roomCallback: roadPathCost, plainCost: 1, swampCost: 4 });
+                        for(var pos in path.path)
+                        {
+                            var pos = path.path[pos];
+                            Game.rooms[pos.roomName].createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
+                        }
+
                         source.road = true;
                     }
                 }
