@@ -12,7 +12,7 @@ var roleSpawn = {
 
         if(Game.spawns['Spawn1'].spawning != null) return;
 
-        checkAndCreate('a', a);
+        if(!checkAndCreate('a', a)) return;
 
         if(checkAndCreate('h'))
         {

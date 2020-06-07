@@ -17,10 +17,12 @@ var roleAttacker = {
         var enemy = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if(enemy != null)
         {
-            var res = creep.rangedAttack(enemy);
-            if(res == ERR_NOT_IN_RANGE) {
-                creep.moveTo(enemy);
+            var res = creep.attack(enemy);
+            if(res == ERR_NOT_IN_RANGE || res == ERR_NO_BODYPART) 
+            {
+                res = creep.rangedAttack(enemy);
             }
+            creep.moveTo(enemy);
         }
         else
         {
@@ -31,6 +33,10 @@ var roleAttacker = {
                 if(res2 == ERR_NOT_IN_RANGE) {
                     var resmove = creep.moveTo(enemySt);
                 }    
+            }
+            else
+            {
+                delete creep.memory.attack;
             }
         }
 	}
