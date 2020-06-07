@@ -5,6 +5,8 @@ MEMORY
 -creeps[]
     -role
     -room
+    >a
+        -attack
     >b
         -destRoom
         -building
@@ -33,7 +35,7 @@ MEMORY
 -spawns[]
     newContainer
     containerId
-    containerCount - kontenery w pomieszczeniu
+    containerCount - kontenery w pomieszczeniu {do wyrzucenia}
     newContainer2
     containerId2
     newTower
@@ -78,11 +80,18 @@ module.exports = { run: function()
         for(var i in Memory.sources)
         {
             var mem = Memory.sources[i];
+            if(mem == null)
+            {
+                console.log("CLEAN NULL MEM SOURCES");
+                Memory.sources.splice(i, 1);
+                return;
+            }
+            
             var s = Game.getObjectById(mem.sourceId);
             if(s == null)
             {
                 console.log("CLEAN MEM SOURCES");
-                delete Memory.sources;
+                Memory.sources.splice(i, 1);
                 return;
             }
             if(typeof(mem.containerId) != 'undefined')

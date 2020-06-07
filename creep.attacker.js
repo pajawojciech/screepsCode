@@ -2,7 +2,12 @@ var utils = require('utils.creep');
 
 var roleAttacker = {
     run: function(creep) {
-        var roomName = creep.room.name;
+        var roomName = creep.memory.attack;
+        if(typeof(roomName) == 'undefined')
+        {
+            roomName = creep.memory.room;
+        }
+        
         if(roomName != creep.room.name)
         {
             utils.goToRoom(creep, roomName);

@@ -35,14 +35,18 @@ module.exports = {
             //ustaw memory sources containerId
             if(typeof(Memory.sources) != 'undefined' && Memory.sources.filter(function(x) { return x.newContainer; } ).length > 0)
             {
-                var sourceMem = Memory.sources.find(function(x) { return x.newContainer; } );
-                var obj = Game.getObjectById(sourceMem.sourceId);
-                
-                var container = obj.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
-                if(container.length > 0)
+                var sourceMems = Memory.sources.filter(function(x) { return x.newContainer; } );
+                for(var i in sourceMems)
                 {
-                    sourceMem.containerId = container[0].id;
-                    sourceMem.newContainer = false;
+                    var sourceMem = sourceMems[i];
+                    var obj = Game.getObjectById(sourceMem.sourceId);
+                    
+                    var container = obj.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                    if(container.length > 0)
+                    {
+                        sourceMem.containerId = container[0].id;
+                        sourceMem.newContainer = false;
+                    }
                 }
             }
             
@@ -53,19 +57,22 @@ module.exports = {
                 if(sources.length > 0)
                 {
                     var source = Game.getObjectById(sources[0].sourceId);
-                    var nearbyContainer = source.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
-                    var res;
-                    if(nearbyContainer.length > 0)
+                    if(source != null)
                     {
-                        res = 0;
-                    }
-                    else
-                    {
-                        res = createConstructionX(source.pos, STRUCTURE_CONTAINER);
-                    }
-                    if(res == 0)
-                    {
-                        sources[0].newContainer = true;
+                        var nearbyContainer = source.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                        var res;
+                        if(nearbyContainer.length > 0)
+                        {
+                            res = 0;
+                        }
+                        else
+                        {
+                            res = createConstructionX(source.pos, STRUCTURE_CONTAINER);
+                        }
+                        if(res == 0)
+                        {
+                            sources[0].newContainer = true;
+                        }
                     }
                 }
                 else //drogi

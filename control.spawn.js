@@ -3,20 +3,17 @@ var bodyDict = require('data.body');
 var roleSpawn = {
     run: function()
     {
-        
-        //if(Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0)
-        //{
-            //checkAndCreate('a', 1);
-        //}
-        
         var b = prepareB();
         var d = prepareD();
         prepareC();
         var r = prepareR();
         var cl = prepareCL();
+        var a = prepareA();
 
         if(Game.spawns['Spawn1'].spawning != null) return;
-        
+
+        checkAndCreate('a', a);
+
         if(checkAndCreate('h'))
         {
             checkAndCreate('b', b);
@@ -26,24 +23,27 @@ var roleSpawn = {
             {
                 checkAndCreate('u');
 
-                if(checkAndCreate('d', d) && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
+                if(typeof(Memory.sources) != 'undefined')
                 {
-                    checkAndCreate('c', Memory.sources.length);
-                    
-                    checkAndCreate('r', r);
-
-                    if(typeof(Game.spawns['Spawn1'].memory.towerId) == 'undefined')
+                    if(checkAndCreate('d', d)) // && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
                     {
-                        var ill = Game.spawns['Spawn1'].room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
-                        if(ill.length > 0)
+                        checkAndCreate('c', Memory.sources.length + Memory.claim.length);
+                        
+                        checkAndCreate('r', r);
+    
+                        if(typeof(Game.spawns['Spawn1'].memory.towerId) == 'undefined')
                         {
-                            checkAndCreate('he');
+                            var ill = Game.spawns['Spawn1'].room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
+                            if(ill.length > 0)
+                            {
+                                checkAndCreate('he');
+                            }
                         }
-                    }
-
-                    if(typeof(Memory.claim) != 'undefined')
-                    {
-                        checkAndCreate('cl', cl);
+    
+                        if(typeof(Memory.claim) != 'undefined')
+                        {
+                            checkAndCreate('cl', cl);
+                        }
                     }
                 }
             }
@@ -169,6 +169,7 @@ var prepareD = function()
 
 var prepareC = function()
 {
+    if(typeof(Memory.sources) == 'undefined') return;
     var sources = Memory.sources.filter((x) => typeof(x.containerId) != 'undefined' );
     for(var i in sources)
     {
@@ -201,6 +202,41 @@ var prepareCL = function()
         }
     }
     return Memory.claim.length;
+}
+
+var prepareA = function()
+{
+    var ret = 0;
+    for(var i in Memory.claim)
+    {
+        var roomName = Memory.claim[i].room;
+        var room = Game.rooms[roomName];
+        if(typeof(room) != 'undefined')
+        {
+            var res = room.controller.reservation;
+            if(typeof(res) != 'undefined')
+            {
+                var x1 = room.find(FIND_HOSTILE_CREEPS).length;
+                var x2 = room.find(FIND_HOSTILE_STRUCTURES).length;
+                
+                if(x1 + x2 > 0)
+                {
+                    ret += 4;
+                    
+                    var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && creep.memory.attack == roomName).length; 
+                    if(cr < 4)
+                    {
+                        var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && typeof(creep.memory.attack) == 'undefined');
+                        if(crFree.length > 0)
+                        {
+                            crFree[0].memory.attack = roomName;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return ret;
 }
 
 var getBody = function(role, limit)

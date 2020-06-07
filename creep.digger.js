@@ -16,7 +16,7 @@ var roleDigger = {
                 }
             });
             
-            if(target.store.getFreeCapacity() != 0)
+            if(typeof(target) != 'undefined' && target != null && target.store.getFreeCapacity() != 0)
             {
                 if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
