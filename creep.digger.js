@@ -9,20 +9,22 @@ var roleDigger = {
         }
         else 
         {
-            var targets;
-            targets = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+            var target;
+            target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_CONTAINER) 
-                    //&& structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-                    ;
+                    return (structure.structureType == STRUCTURE_CONTAINER);
                 }
             });
             
-            //if(targets.length > 0) 
+            if(target.store.getFreeCapacity() != 0)
             {
-                if(creep.transfer(targets, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets);
+                if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
                 }
+            }
+            else
+            {
+                creep.drop(RESOURCE_ENERGY);
             }
         }
 	}

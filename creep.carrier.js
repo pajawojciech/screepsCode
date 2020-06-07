@@ -2,9 +2,21 @@ var roleCarrier = {
     run: function(creep) {
         var GET_FROM_STORAGE = false;
         
-	    if(creep.store.getUsedCapacity() == 0) 
+	    if(creep.store.getUsedCapacity() < creep.store.getCapacity() / 2) 
 	    {
 	        delete creep.memory.targetId;
+
+            var dropped = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2);
+            if(dropped.length > 0)
+            {
+                var closestDropped = creep.pos.findClosestByRange(dropped);
+                var res = creep.pickup(closestDropped);
+                if(res == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(closestDropped);
+                }
+                return;
+            }
+
 	        if(typeof(creep.memory.containerId) == 'undefined')
 	        {
 	            if(typeof(creep.memory.assignedCont) != 'undefined')
@@ -27,12 +39,12 @@ var roleCarrier = {
                     {
                         creep.memory.containerId = s[0];
                     }
-                
-                    if(GET_FROM_STORAGE && creep.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
-                    {
-                        creep.memory.containerId = creep.room.storage.id;
-                    }
 	            }
+
+                if(GET_FROM_STORAGE && creep.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
+                {
+                    creep.memory.containerId = creep.room.storage.id;
+                }
 	        }
                 
             var c = Game.getObjectById(creep.memory.containerId);

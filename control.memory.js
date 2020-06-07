@@ -22,6 +22,8 @@ MEMORY
         -destRoom
     >u
         -upgrading
+    >cl
+        -claim - room do przejęcia
 -sources[]
     -sourceId
     -space - miejsce wokół source
