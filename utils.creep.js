@@ -60,6 +60,11 @@ module.exports = {
     
     goToRoom : function (creep, roomName)
     {
+        if(typeof(roomName) == 'undefined')
+        {
+            return;
+        }
+        
         var room = Game.rooms[roomName];
         if(typeof(room) != 'undefined')
         {

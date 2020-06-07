@@ -3,30 +3,33 @@ var bodyDict = require('data.body');
 var roleSpawn = {
     run: function()
     {
-        if(Game.spawns['Spawn1'].spawning != null) return;
         
         //if(Game.spawns['Spawn1'].room.find(FIND_HOSTILE_CREEPS).length > 0)
         //{
             //checkAndCreate('a', 1);
         //}
+        
+        var b = prepareB();
+        var d = prepareD();
+        prepareC();
+        var r = prepareR();
+        var cl = prepareCL();
 
+        if(Game.spawns['Spawn1'].spawning != null) return;
+        
         if(checkAndCreate('h'))
         {
-            var b = prepareB();
             checkAndCreate('b', b);
             
-            var d = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
-            if(d > 0)
+            var cont = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
+            if(cont > 0)
             {
                 checkAndCreate('u');
 
-                d = prepareD();
                 if(checkAndCreate('d', d) && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
                 {
-                    prepareC();
                     checkAndCreate('c', Memory.sources.length);
                     
-                    var r = prepareR();
                     checkAndCreate('r', r);
 
                     if(typeof(Game.spawns['Spawn1'].memory.towerId) == 'undefined')
@@ -40,7 +43,6 @@ var roleSpawn = {
 
                     if(typeof(Memory.claim) != 'undefined')
                     {
-                        var cl = prepareCL();
                         checkAndCreate('cl', cl);
                     }
                 }

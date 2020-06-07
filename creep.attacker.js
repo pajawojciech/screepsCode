@@ -1,17 +1,11 @@
+var utils = require('utils.creep');
+
 var roleAttacker = {
     run: function(creep) {
         var roomName = creep.room.name;
         if(roomName != creep.room.name)
         {
-            var direction = creep.room.findExitTo(roomName);
-            var exits = creep.room.find(direction);
-            
-            if(exits.length > 0)
-            {
-                var exit = creep.pos.findClosestByPath(exits);
-                creep.moveTo(exit);
-            }
-            
+            utils.goToRoom(creep, roomName);
             return;
         }
         
