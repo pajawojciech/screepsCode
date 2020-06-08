@@ -22,7 +22,7 @@ var roleCarrier = {
 	            if(typeof(creep.memory.assignedCont) != 'undefined')
 	            {
 	                var ac = Game.getObjectById(creep.memory.assignedCont);
-	                if(ac.store.getUsedCapacity(RESOURCE_ENERGY) > 300)
+	                if(ac != null && ac.store.getUsedCapacity(RESOURCE_ENERGY) > 300)
 	                {
 	                    creep.memory.containerId = creep.memory.assignedCont;
 	                }

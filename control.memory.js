@@ -47,6 +47,13 @@ MEMORY
 
 module.exports = { run: function()
 {
+    if(Game.time % 1000 == 0)
+    {
+        var d = new Date() - Date.parse(Memory.tick);
+        console.log('tickrate ' + (d / 1000));
+        Memory.tick = new Date();
+    }
+    
     if(typeof(Memory.sources) == 'undefined')
     {
         Memory.sources = [];
