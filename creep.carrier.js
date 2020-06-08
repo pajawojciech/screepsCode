@@ -66,7 +66,7 @@ var roleCarrier = {
     	        var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_CONTAINER) 
-                    && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                    && structure.store.getFreeCapacity(RESOURCE_ENERGY) > creep.store.getCapacity() / 2
                     && !(x.includes(structure.id));
                     }
                 });

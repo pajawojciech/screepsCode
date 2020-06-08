@@ -11,10 +11,22 @@ var role = {
         }
         else
         {
-            var res = creep.reserveController(creep.room.controller);
-            if(res == ERR_NOT_IN_RANGE)
+            var contr = creep.room.controller;
+            if(contr.reservation != null && contr.reservation.username != 'www')
             {
-                creep.moveTo(creep.room.controller.pos);
+                var res = creep.attackController(contr);
+                if(res == ERR_NOT_IN_RANGE)
+                {
+                    creep.moveTo(contr.pos);
+                }
+            }
+            else
+            {
+                var res = creep.reserveController(contr);
+                if(res == ERR_NOT_IN_RANGE)
+                {
+                    creep.moveTo(contr.pos);
+                }
             }
         }
 	}
