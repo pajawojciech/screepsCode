@@ -21,11 +21,11 @@ var role = {
                 }
             }
             else
-            {
+                    {
                 var res = creep.reserveController(contr);
                 if(res == ERR_NOT_IN_RANGE)
                 {
-                    creep.moveTo(contr.pos);
+                    creep.moveTo(contr.pos, {maxRooms: 1});
                 }
             }
         }
