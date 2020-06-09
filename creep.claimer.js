@@ -12,7 +12,7 @@ var role = {
         else
         {
             var contr = creep.room.controller;
-            if(contr.reservation != null && contr.reservation.username != 'www')
+            if(contr.reservation != null && contr.reservation.username != creep.owner.username)
             {
                 var res = creep.attackController(contr);
                 if(res == ERR_NOT_IN_RANGE)
