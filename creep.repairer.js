@@ -2,6 +2,14 @@ var utils = require('utils.creep');
 
 var roleRepairer = {
     run: function(creep) {
+        //var unwanted = Game.getObjectById('4a1a4c0ddb29064');
+        //if(unwanted != null)
+        {
+            //creep.moveTo(unwanted);
+            //creep.dismantle(unwanted);
+            //return;
+        }
+        
         var roomName = creep.memory.destRoom;
         if(typeof(roomName) == 'undefined')
         {

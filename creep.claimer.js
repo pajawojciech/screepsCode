@@ -2,7 +2,7 @@ var utils = require('utils.creep');
 
 var role = {
     run: function(creep) {
-        if(Memory.claim.length == 0) return;
+        if(typeof(Memory.claim) == 'undefined' || Memory.claim.length == 0) return;
         
         var roomName = creep.memory.claim;
         if(roomName != creep.room.name)

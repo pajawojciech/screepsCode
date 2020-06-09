@@ -64,7 +64,10 @@ module.exports = {
         {
             return;
         }
-        
+
+		creep.moveTo(new RoomPosition(25,25, roomName));
+		return;
+
         var room = Game.rooms[roomName];
         if(typeof(room) != 'undefined')
         {
