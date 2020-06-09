@@ -188,7 +188,7 @@ var prepareC = function()
 
 var prepareCL = function()
 {
-    for(var i in Memory.claim)
+    for(var i in Memory.claim.filter((x) => typeof(x.getRoom) == 'undefined' || x.getRoom ))
     {
         var roomName = Memory.claim[i].room;
         var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.claim == roomName).length; 
@@ -198,6 +198,16 @@ var prepareCL = function()
             if(crFree.length > 0)
             {
                 crFree[0].memory.claim = roomName;
+            }
+        }
+        
+        var getRoom = Memory.claim[i].getRoom;
+        if(typeof(getRoom) != 'undefined' && getRoom == true)
+        {
+            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.claim == roomName); 
+            if(cr.length > 0)
+            {
+                cr[0].memory.getRoom = true;
             }
         }
     }

@@ -21,8 +21,28 @@ var role = {
                 }
             }
             else
+            {
+                var res;
+                if(typeof(creep.memory.getRoom) != 'undefined')
+                {
+                    res = creep.claimController(contr);
+                    if(res == 0)
                     {
-                var res = creep.reserveController(contr);
+                        delete creep.memory.claim;
+                        delete creep.memory.getRoom;
+                        for(var i in Memory.claim)
+                        {
+                            if(Memory.claim[i].room == roomName)
+                            {
+                                Memory.claim[i].getRoom = false;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    res = creep.reserveController(contr);
+                }
                 if(res == ERR_NOT_IN_RANGE)
                 {
                     creep.moveTo(contr.pos, {maxRooms: 1});

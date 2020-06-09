@@ -26,6 +26,8 @@ MEMORY
         -upgrading
     >cl
         -claim - room do przejęcia
+        -home - jeszcze nie jest uzywane
+        -getRoom - zajecie pokoju
 -sources[]
     -sourceId
     -space - miejsce wokół source

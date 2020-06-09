@@ -9,7 +9,7 @@ module.exports = {
             var closestDropped = creep.pos.findClosestByRange(dropped);
             var res = creep.pickup(closestDropped);
             if(res == ERR_NOT_IN_RANGE) {
-                creep.moveTo(closestDropped);
+                creep.moveTo(closestDropped, {maxRooms: 1});
             }
             return;
         }
@@ -28,7 +28,7 @@ module.exports = {
             var closestContainer = creep.pos.findClosestByRange(containers);
             var res = creep.withdraw(closestContainer, RESOURCE_ENERGY);
             if(res == ERR_NOT_IN_RANGE) {
-                creep.moveTo(closestContainer);
+                creep.moveTo(closestContainer, {maxRooms: 1});
             }
             return;
         }
@@ -42,7 +42,7 @@ module.exports = {
             
             var res = creep.harvest(closestSource, RESOURCE_ENERGY);
             if(creep.harvest(closestSource) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(closestSource);
+                creep.moveTo(closestSource, {maxRooms: 1});
             }
             return;
         }
@@ -50,12 +50,12 @@ module.exports = {
         if(containers.length > 0)
         {
             var closestContainer = creep.pos.findClosestByRange(containers);
-            creep.moveTo(closestContainer);
+            creep.moveTo(closestContainer, {maxRooms: 1});
             return;
         }
 
         var closestSource = creep.pos.findClosestByRange(sources);
-        creep.moveTo(closestSource);
+        creep.moveTo(closestSource, {maxRooms: 1});
     },
     
     goToRoom : function (creep, roomName)
