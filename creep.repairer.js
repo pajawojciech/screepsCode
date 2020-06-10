@@ -1,4 +1,5 @@
 var utils = require('utils.creep');
+var roleUpgrader = require('creep.upgrader');
 
 var roleRepairer = {
     run: function(creep) {
@@ -21,6 +22,12 @@ var roleRepairer = {
             delete creep.memory.targetId;
             utils.goToRoom(creep, roomName);
             return true;
+        }
+        
+        if(creep.room.controller.my && creep.room.controller.level == 1)
+        {
+            roleUpgrader.run(creep);
+            return;
         }
         
         if(creep.memory.work && creep.store[RESOURCE_ENERGY] == 0) {
@@ -95,7 +102,7 @@ var roleRepairer = {
 	        
 	        var res = creep.repair(target);
             if(res == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
+                creep.moveTo(target, {maxRooms: 1});
             }
             else if(res != OK || target.hits == target.hitsMax)
             {

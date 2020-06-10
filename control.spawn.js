@@ -3,46 +3,50 @@ var bodyDict = require('data.body');
 var roleSpawn = {
     run: function()
     {
-        var b = prepareB();
-        var d = prepareD();
-        prepareC();
-        var r = prepareR();
-        var cl = prepareCL();
-        var a = prepareA();
-
-        if(Game.spawns['Spawn1'].spawning != null) return;
-
-        if(!checkAndCreate('a', a)) return;
-
-        if(checkAndCreate('h'))
+        for(var name in Game.spawns)
         {
-            checkAndCreate('b', b);
-            
-            var cont = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
-            if(cont > 0)
+            var sp = Game.spawns[name];
+            var b = prepareB(sp);
+            var d = prepareD(sp);
+            var c = prepareC(sp);
+            var r = prepareR(sp);
+            var cl = prepareCL(sp);
+            var a = prepareA(sp);
+    
+            if(sp.spawning != null) continue;
+    
+            if(!checkAndCreate(sp, 'a', a)) return;
+    
+            if(checkAndCreate(sp, 'h'))
             {
-                checkAndCreate('u');
-
-                if(typeof(Memory.sources) != 'undefined')
+                checkAndCreate(sp, 'b', b);
+                
+                var cont = sp.room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
+                if(cont > 0)
                 {
-                    if(checkAndCreate('d', d)) // && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
+                    checkAndCreate(sp, 'u');
+    
+                    if(typeof(Memory.sources) != 'undefined')
                     {
-                        checkAndCreate('c', Memory.sources.length + Memory.claim.length);
-                        
-                        checkAndCreate('r', r);
-    
-                        if(typeof(Game.spawns['Spawn1'].memory.towerId) == 'undefined')
+                        if(checkAndCreate(sp, 'd', d)) // && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
                         {
-                            var ill = Game.spawns['Spawn1'].room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
-                            if(ill.length > 0)
+                            checkAndCreate(sp, 'c', c);
+                            
+                            checkAndCreate(sp, 'r', r);
+        
+                            if(typeof(sp.memory.towerId) == 'undefined')
                             {
-                                checkAndCreate('he');
+                                var ill = sp.room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
+                                if(ill.length > 0)
+                                {
+                                    checkAndCreate(sp, 'he');
+                                }
                             }
-                        }
-    
-                        if(typeof(Memory.claim) != 'undefined')
-                        {
-                            checkAndCreate('cl', cl);
+        
+                            if(typeof(Memory.claim) != 'undefined')
+                            {
+                                checkAndCreate(sp, 'cl', cl);
+                            }
                         }
                     }
                 }
@@ -51,11 +55,10 @@ var roleSpawn = {
     }
 };
 
-var checkAndCreate = function(role, limit) //zwraca informację, czy limit spełniony
+var checkAndCreate = function(sp, role, limit) //zwraca informację, czy limit spełniony
 {
-    var sp = Game.spawns['Spawn1'];
-    var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role && (creep.ticksToLive > 50 || typeof(creep.ticksToLive) == 'undefined'));
-	var energyCap = Game.spawns['Spawn1'].room.energyCapacityAvailable;
+    var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == sp.room.name && (creep.ticksToLive > 50 || typeof(creep.ticksToLive) == 'undefined'));
+	var energyCap = sp.room.energyCapacityAvailable;
 	
 	if((role == 'h' || role == 'd') && cr.length == 0)
 	{
@@ -71,10 +74,12 @@ var checkAndCreate = function(role, limit) //zwraca informację, czy limit speł
 	if(cr.length < limit) {
 		var newName = role + Game.time;
         var body = conf.body;
-		var res = Game.spawns['Spawn1'].spawnCreep(body, newName, {memory: {role: role, room: sp.room.name }});
+		var res = 
+		//1;
+		sp.spawnCreep(body, newName, {memory: {role: role, room: sp.room.name }});
 		if(res == 0)
 		{
-		    console.log('Spawning new ' + newName);
+		    console.log(sp.name + ' Spawning new ' + newName);
 		}
 		else
 		{
@@ -88,21 +93,29 @@ var checkAndCreate = function(role, limit) //zwraca informację, czy limit speł
 	}
 };
 
-var prepareB = function()
+var prepareB = function(sp)
 {
-    var eca = Game.spawns['Spawn1'].room.energyCapacityAvailable;
-    var b = Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0 ? getBody('b', eca).limit : 0;
-    for(var i in Memory.claim)
+    var eca = sp.room.energyCapacityAvailable;
+    var b = sp.room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0 ? getBody('b', eca).limit : 0;
+    var claims = Memory.claim.filter((x) => x.home == sp.room.name );
+    for(var i in claims)
     {
-        var roomName = Memory.claim[i].room;
+        var roomName = claims[i].room;
         var claimRoom = Game.rooms[roomName];
         if(typeof(claimRoom) != 'undefined' && claimRoom.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.my }).length > 0)
         {
+            var t = 1;
             b++;
-            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && creep.memory.destRoom == roomName).length; 
-            if(cr < 1)
+            if(claimRoom.controller.my)
             {
-                var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && typeof(creep.memory.destRoom) == 'undefined');
+                b += 1;
+                t = 2;
+            }
+            
+            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && creep.memory.destRoom == roomName && creep.memory.room == sp.room.name).length; 
+            if(cr < t)
+            {
+                var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && creep.memory.room == sp.room.name && typeof(creep.memory.destRoom) == 'undefined');
                 if(crFree.length > 0)
                 {
                     crFree[0].memory.destRoom = roomName;
@@ -113,21 +126,22 @@ var prepareB = function()
     return b;
 }
 
-var prepareR = function()
+var prepareR = function(sp)
 {
-    var eca = Game.spawns['Spawn1'].room.energyCapacityAvailable;
+    var eca = sp.room.energyCapacityAvailable;
     var ret = getBody('r', eca).limit;
-    for(var i in Memory.claim)
+    var claims = Memory.claim.filter((x) => x.home == sp.room.name );
+    for(var i in claims)
     {
-        var roomName = Memory.claim[i].room;
+        var roomName = claims[i].room;
         var claimRoom = Game.rooms[roomName];
         if(typeof(claimRoom) != 'undefined' && claimRoom.find(FIND_STRUCTURES, { filter: (x) => x.structureType == STRUCTURE_CONTAINER }).length > 0)
         {
             ret++;
-            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'r' && creep.memory.destRoom == roomName).length; 
+            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'r' && creep.memory.room == sp.room.name && creep.memory.destRoom == roomName).length; 
             if(cr < 1)
             {
-                var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'r' && typeof(creep.memory.destRoom) == 'undefined');
+                var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'r' && creep.memory.room == sp.room.name && typeof(creep.memory.destRoom) == 'undefined');
                 if(crFree.length > 0)
                 {
                     crFree[0].memory.destRoom = roomName;
@@ -138,25 +152,26 @@ var prepareR = function()
     return ret;
 }
 
-var prepareD = function()
+var prepareD = function(sp)
 {
-    var eca = Game.spawns['Spawn1'].room.energyCapacityAvailable;
+    var eca = sp.room.energyCapacityAvailable;
     var d = 0;
     var dLimit = getBody('d', eca).limit;
     if(typeof(dLimit) == 'undefined') dLimit = 0;
-    for(var i in Memory.sources)
+    var sources = Memory.sources.filter((x) => x.home == sp.room.name);
+    for(var i in sources)
     {
-        var mem = Memory.sources[i];
+        var mem = sources[i];
         if(typeof(mem.containerId) != 'undefined')
         {
-            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && creep.memory.sourceId == mem.sourceId);  
-            var limit = (mem.space > dLimit) ? dLimit : mem.space;
+            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && creep.memory.room == sp.room.name && creep.memory.sourceId == mem.sourceId);  
+            var limit = 1;//(mem.space > dLimit) ? dLimit : mem.space;
             
             d += limit;
             
             if(cr.length < limit)
             {
-                var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && typeof(creep.memory.sourceId) == 'undefined');
+                var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && creep.memory.room == sp.room.name && typeof(creep.memory.sourceId) == 'undefined');
                 if(crFree.length > 0)
                 {
                     crFree[0].memory.sourceId = mem.sourceId;
@@ -167,64 +182,68 @@ var prepareD = function()
     return d;
 }
 
-var prepareC = function()
+var prepareC = function(sp)
 {
     if(typeof(Memory.sources) == 'undefined') return;
-    var sources = Memory.sources.filter((x) => typeof(x.containerId) != 'undefined' );
+    var sources = Memory.sources.filter((x) => typeof(x.containerId) != 'undefined' && x.home == sp.room.name );
     for(var i in sources)
     {
         var source = sources[i];
-        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.assignedCont == source.containerId).length; 
+        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && creep.memory.assignedCont == source.containerId).length; 
         if(cr < 1)
         {
-            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && typeof(creep.memory.assignedCont) == 'undefined');
+            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && typeof(creep.memory.assignedCont) == 'undefined');
             if(crFree.length > 0)
             {
                 crFree[0].memory.assignedCont = source.containerId;
             }
         }
     }
+    
+    return Memory.sources.filter((x) => x.home == sp.room.name).length + Memory.claim.filter((x) => x.home == sp.room.name).length;
 }
 
-var prepareCL = function()
+var prepareCL = function(sp)
 {
-    for(var i in Memory.claim.filter((x) => typeof(x.getRoom) == 'undefined' || x.getRoom ))
+    var claims = Memory.claim.filter((x) => (typeof(x.getRoom) == 'undefined' || x.getRoom) && x.home == sp.room.name );
+    for(var i in claims)
     {
-        var roomName = Memory.claim[i].room;
-        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.claim == roomName).length; 
+        var roomName = claims.room;
+        
+        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.room == sp.room.name && creep.memory.claim == roomName).length; 
         if(cr < 1)
         {
-            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && typeof(creep.memory.claim) == 'undefined');
+            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.room == sp.room.name && typeof(creep.memory.claim) == 'undefined');
             if(crFree.length > 0)
             {
                 crFree[0].memory.claim = roomName;
             }
         }
         
-        var getRoom = Memory.claim[i].getRoom;
+        var getRoom = claims[i].getRoom;
         if(typeof(getRoom) != 'undefined' && getRoom == true)
         {
-            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.claim == roomName); 
+            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.room == sp.room.name && creep.memory.claim == roomName); 
             if(cr.length > 0)
             {
                 cr[0].memory.getRoom = true;
             }
         }
     }
-    return Memory.claim.length;
+    return Memory.claim.filter((x) => x.home == sp.room.name).length;
 }
 
-var prepareA = function()
+var prepareA = function(sp)
 {
     var ret = 0;
-    for(var i in Memory.claim)
+    for(var i in Memory.claim.filter((x) => x.home == sp.room.name))
     {
         var roomName = Memory.claim[i].room;
         var room = Game.rooms[roomName];
         if(typeof(room) != 'undefined')
         {
             var res = room.controller.reservation;
-            if(typeof(res) != 'undefined')
+            if(typeof(res) != 'undefined' || room.controller.my)
             {
                 var x1 = room.find(FIND_HOSTILE_CREEPS).length;
                 var x2 = room.find(FIND_HOSTILE_STRUCTURES).length;
@@ -259,7 +278,13 @@ var getBody = function(role, limit)
         limit = limit - 50;
         body = bodyDict[role + limit];
     }
-
+    if(false && typeof(body) == 'undefined')
+    {
+        return {
+            "limit": 0,
+            "body": []
+        };
+    }
     return {
         "limit": body[0],
         "body": body[1]

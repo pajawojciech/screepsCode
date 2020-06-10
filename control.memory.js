@@ -2,6 +2,7 @@
 MEMORY
 -claim[]
     -room
+    -home
 -creeps[]
     -role
     -room
@@ -30,10 +31,11 @@ MEMORY
         -getRoom - zajecie pokoju
 -sources[]
     -sourceId
-    -space - miejsce wokół source
+    -space - miejsce wokół source - usuniete
     -newContainer - powstało construction site, false jeśli zbudowane
     -containerId
     -road - droga wyznaczona do controller i spawn
+    -home
 -spawns[]
     newContainer
     containerId
@@ -59,29 +61,35 @@ module.exports = { run: function()
     if(typeof(Memory.sources) == 'undefined')
     {
         Memory.sources = [];
-        var terr = new Room.Terrain(Game.spawns['Spawn1'].room.name);
-        var sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES).map(function (x) { return x.id; });
-        for(var source in sources)
+        
+        for(var i in Memory.spawns)
         {
-            var val = sources[source];
-            var item = { "sourceId" : val };
-             
-            var count = 0;
-            var sourcePos = Game.getObjectById(val).pos;
-            var x = sourcePos.x;
-            var y = sourcePos.y;
-            for(var i in nearbyArr)
+            var room = Game.rooms[Game.spawns[i].room.name];
+            var terr = new Room.Terrain(room.name);
+            var sources = room.find(FIND_SOURCES).map(function (x) { return x.id; });
+            for(var source in sources)
             {
-                var arrPos = nearbyArr[i];
-                if(terr.get(x - arrPos[0], y - arrPos[1]) != 1)
+                var val = sources[source];
+                var item = { "sourceId" : val, "home" : room.name };
+                /*
+                var count = 0;
+                var sourcePos = Game.getObjectById(val).pos;
+                var x = sourcePos.x;
+                var y = sourcePos.y;
+                for(var i in nearbyArr)
                 {
-                    count++;
+                    var arrPos = nearbyArr[i];
+                    if(terr.get(x - arrPos[0], y - arrPos[1]) != 1)
+                    {
+                        count++;
+                    }
                 }
-            }
-            item.space = count;
-            
-            Memory.sources.push(item);
-        }   
+                item.space = count;
+                */
+                Memory.sources.push(item);
+            }   
+        }
+
         console.log("INIT MEM SOURCES");
     }
     else
@@ -190,7 +198,7 @@ module.exports = { run: function()
                         var source = sources[i];
                         if(!sourcesMemory.includes(source.id))
                         {
-                            var item = { "sourceId" : source.id, "space" : 1, "ext" : true };
+                            var item = { "sourceId" : source.id, "space" : 1, "ext" : true, "home" : Memory.claim[i].home };
                             Memory.sources.push(item);
                             console.log('ADD EXT SOURCE');
                         }

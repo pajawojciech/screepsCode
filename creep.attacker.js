@@ -55,6 +55,7 @@ var roleAttacker = {
             else
             {
                 delete creep.memory.attack;
+                creep.moveTo(new RoomPosition(25,25, creep.room.name));
             }
         }
 	}
