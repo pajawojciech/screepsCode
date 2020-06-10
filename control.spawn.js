@@ -72,14 +72,14 @@ var checkAndCreate = function(sp, role, limit) //zwraca informację, czy limit s
     }
     
 	if(cr.length < limit) {
-		var newName = role + Game.time;
+		var newName = role + Game.time + sp.name;
         var body = conf.body;
 		var res = 
 		//1;
 		sp.spawnCreep(body, newName, {memory: {role: role, room: sp.room.name }});
 		if(res == 0)
 		{
-		    console.log(sp.name + ' Spawning new ' + newName);
+		    console.log('Spawning new ' + newName);
 		}
 		else
 		{
@@ -200,7 +200,7 @@ var prepareC = function(sp)
         }
     }
     
-    return Memory.sources.filter((x) => x.home == sp.room.name).length + Memory.claim.filter((x) => x.home == sp.room.name).length;
+    return sources.length + Memory.claim.filter((x) => x.home == sp.room.name).length;
 }
 
 var prepareCL = function(sp)
@@ -278,8 +278,9 @@ var getBody = function(role, limit)
         limit = limit - 50;
         body = bodyDict[role + limit];
     }
-    if(false && typeof(body) == 'undefined')
+    if(typeof(body) == 'undefined')
     {
+        console.log("ERROR SPAWN: " + role + limit);
         return {
             "limit": 0,
             "body": []
