@@ -78,7 +78,16 @@ var roleRepairer = {
                             && structure.hits != structure.hitsMax);
                         }
                     });
-                    target = targets.sort(sortStructuresByHits)[0];
+                    var targetsSort = targets.sort(sortStructuresByHits);
+                    var targetsRamp = targetsSort.filter((x) => x.structureType == STRUCTURE_RAMPART && x.hits == 1);
+                    if(targetsRamp.length > 0)
+                    {
+                        target = targetsRamp[0];
+                    }
+                    else
+                    {
+                        target = targetsSort[0];
+                    }
 	            }
 	            else
 	            {
@@ -141,14 +150,6 @@ var sortStructuresByHits = function(x,y) //procentowo najsłabszy
     }
     else if(xg == yg)
     {
-        if(xg.structureType == STRUCTURE_RAMPART && yg.structureType == STRUCTURE_WALL)
-        {
-            return -1;
-        }
-        else if(xg.structureType == STRUCTURE_WALL && yg.structureType == STRUCTURE_RAMPART)
-        {
-            return 1;
-        }
         return 0;
     }
     return -1;
