@@ -31,7 +31,7 @@ var roleCarrier = {
 	            if(typeof(creep.memory.containerId) == 'undefined')
 	            {
         	        var s = Memory.sources
-        	            .filter((x) => typeof(x.containerId) != 'undefined' && x.home == creep.room.name )
+        	            .filter((x) => typeof(x.containerId) != 'undefined' && x.home == creep.memory.room )
         	            .map((x) => x.containerId)
         	            .sort(sortContainers);
 

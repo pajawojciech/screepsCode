@@ -58,7 +58,10 @@ module.exports = { run: function()
         console.log('tickrate ' + (d / 1000));
         Memory.tick = new Date();
     }
-    
+    if(typeof(Memory.claim) == 'undefined')
+    {
+        Memory.claim = [];
+    }
     if(typeof(Memory.sources) == 'undefined')
     {
         Memory.sources = [];

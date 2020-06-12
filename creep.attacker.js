@@ -12,7 +12,7 @@ var roleAttacker = {
         var roomName = creep.memory.attack;
         if(typeof(roomName) == 'undefined')
         {
-            roomName = creep.memory.room;
+            return;
         }
         
         if(roomName != creep.room.name)
@@ -39,6 +39,7 @@ var roleAttacker = {
             if(res == ERR_NOT_IN_RANGE || res == ERR_NO_BODYPART) 
             {
                 res = creep.rangedAttack(enemy);
+                //res = creep.rangedMassAttack();
             }
             creep.moveTo(enemy);
         }

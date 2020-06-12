@@ -12,10 +12,14 @@ var roleSpawn = {
             var r = prepareR(sp);
             var cl = prepareCL(sp);
             var a = prepareA(sp);
+            //var h = prepareH(sp);
     
             if(sp.spawning != null) continue;
     
             if(!checkAndCreate(sp, 'a', a)) return;
+            if(!checkAndCreate(sp, 'he', a / 4)) return;
+            
+            //checkAndCreate(sp, 't');
     
             if(checkAndCreate(sp, 'h'))
             {
@@ -34,14 +38,14 @@ var roleSpawn = {
                             
                             checkAndCreate(sp, 'r', r);
         
-                            if(typeof(sp.memory.towerId) == 'undefined')
-                            {
-                                var ill = sp.room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
-                                if(ill.length > 0)
-                                {
-                                    checkAndCreate(sp, 'he');
-                                }
-                            }
+                            //if(typeof(sp.memory.towerId) == 'undefined')
+                            //{
+                                //var ill = sp.room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
+                                //if(ill.length > 0)
+                                ///{
+                                    //checkAndCreate(sp, 'he');
+                                //}
+                            //}
         
                             if(typeof(Memory.claim) != 'undefined')
                             {
@@ -274,6 +278,14 @@ var prepareA = function(sp)
             ret += 4;
         }
     }
+    return ret;
+}
+
+var prepareH = function(sp)
+{
+    var ret = 0;
+    
+    
     return ret;
 }
 
