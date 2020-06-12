@@ -230,7 +230,7 @@ var prepareCL = function(sp)
             }
         }
     }
-    return Memory.claim.filter((x) => x.home == sp.room.name).length;
+    return Memory.claim.filter((x) => x.home == sp.room.name && x.getRoom != false).length;
 }
 
 var prepareA = function(sp)

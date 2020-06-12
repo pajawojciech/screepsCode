@@ -3,6 +3,7 @@ MEMORY
 -claim[]
     -room
     -home
+    -getRoom
 -creeps[]
     -role
     -room
