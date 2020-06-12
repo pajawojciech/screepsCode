@@ -31,7 +31,7 @@ var roleCarrier = {
 	            if(typeof(creep.memory.containerId) == 'undefined')
 	            {
         	        var s = Memory.sources
-        	            .filter((x) => typeof(x.containerId) != 'undefined' )
+        	            .filter((x) => typeof(x.containerId) != 'undefined' && x.home == creep.room.name )
         	            .map((x) => x.containerId)
         	            .sort(sortContainers);
 
@@ -41,7 +41,7 @@ var roleCarrier = {
                     }
 	            }
 
-                if(GET_FROM_STORAGE && creep.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
+                if(GET_FROM_STORAGE && typeof(creep.room.storage) != 'undefined' && creep.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
                 {
                     creep.memory.containerId = creep.room.storage.id;
                 }
@@ -61,9 +61,11 @@ var roleCarrier = {
         {
             delete creep.memory.containerId;
             var x = Memory.sources.map((x) => x.containerId);
+            var room = Game.rooms[creep.memory.room];
+            
             if(typeof(creep.memory.targetId) == 'undefined')
 	        {
-    	        var targets = creep.room.find(FIND_STRUCTURES, {
+    	        var targets = room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_CONTAINER) 
                     && structure.store.getFreeCapacity(RESOURCE_ENERGY) > creep.store.getCapacity() / 2
@@ -75,13 +77,13 @@ var roleCarrier = {
                 {
                     creep.memory.targetId = minEnergy(targets).id;
                 }
-                else if(typeof(creep.room.storage) != 'undefined')
+                else if(typeof(room.storage) != 'undefined')
                 {
-                    creep.memory.targetId = creep.room.storage.id;
+                    creep.memory.targetId = room.storage.id;
                 }
                 else
                 {
-                    creep.moveTo(Game.rooms[creep.memory.room].controller);
+                    creep.moveTo(room.controller);
                 }
 	        }
 	        

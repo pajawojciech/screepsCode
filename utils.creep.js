@@ -1,5 +1,5 @@
 module.exports = {
-    getEnergy : function (creep)
+    getEnergy : function (creep, say)
     {
         var MAX_RANGE = 10;
        
@@ -11,6 +11,7 @@ module.exports = {
             if(res == ERR_NOT_IN_RANGE) {
                 creep.moveTo(closestDropped, {maxRooms: 1});
             }
+            if(say)creep.say('drop');
             return;
         }
         
@@ -30,6 +31,7 @@ module.exports = {
             if(res == ERR_NOT_IN_RANGE) {
                 creep.moveTo(closestContainer, {maxRooms: 1});
             }
+            if(say)creep.say('cont' + MAX_RANGE);
             return;
         }
 
@@ -44,6 +46,7 @@ module.exports = {
             if(creep.harvest(closestSource) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(closestSource, {maxRooms: 1});
             }
+            if(say)creep.say('source' + MAX_RANGE);
             return;
         }
 
@@ -51,11 +54,13 @@ module.exports = {
         {
             var closestContainer = creep.pos.findClosestByRange(containers);
             creep.moveTo(closestContainer, {maxRooms: 1});
+            if(say)creep.say('cont L');
             return;
         }
 
         var closestSource = creep.pos.findClosestByRange(sources);
         creep.moveTo(closestSource, {maxRooms: 1});
+        if(say)creep.say('source L');
     },
     
     goToRoom : function (creep, roomName)

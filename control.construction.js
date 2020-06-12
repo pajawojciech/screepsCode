@@ -40,12 +40,14 @@ module.exports = {
                 {
                     var sourceMem = sourceMems[i];
                     var obj = Game.getObjectById(sourceMem.sourceId);
-                    
-                    var container = obj.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
-                    if(container.length > 0)
+                    if(obj != null)
                     {
-                        sourceMem.containerId = container[0].id;
-                        sourceMem.newContainer = false;
+                        var container = obj.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                        if(container.length > 0)
+                        {
+                            sourceMem.containerId = container[0].id;
+                            sourceMem.newContainer = false;
+                        }
                     }
                 }
             }

@@ -28,7 +28,7 @@ var roleSpawn = {
     
                     if(typeof(Memory.sources) != 'undefined')
                     {
-                        if(checkAndCreate(sp, 'd', d)) // && Game.spawns['Spawn1'].memory.containerCount > Memory.sources.length)
+                        if(checkAndCreate(sp, 'd', d))
                         {
                             checkAndCreate(sp, 'c', c);
                             
@@ -165,7 +165,7 @@ var prepareD = function(sp)
         if(typeof(mem.containerId) != 'undefined')
         {
             var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && creep.memory.room == sp.room.name && creep.memory.sourceId == mem.sourceId);  
-            var limit = 1;//(mem.space > dLimit) ? dLimit : mem.space;
+            var limit = (mem.space > dLimit) ? dLimit : mem.space;
             
             d += limit;
             
@@ -208,7 +208,7 @@ var prepareCL = function(sp)
     var claims = Memory.claim.filter((x) => (typeof(x.getRoom) == 'undefined' || x.getRoom) && x.home == sp.room.name );
     for(var i in claims)
     {
-        var roomName = claims.room;
+        var roomName = claims[i].room;
         
         var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.room == sp.room.name && creep.memory.claim == roomName).length; 
         if(cr < 1)
@@ -263,6 +263,15 @@ var prepareA = function(sp)
                     }
                 }
             }
+        }
+    }
+    if(typeof(sp.memory.towerId) == 'undefined')
+    {
+        var room = sp.room;
+        var x1 = room.find(FIND_HOSTILE_CREEPS).length;
+        if(x1 > 0)
+        {
+            ret += 4;
         }
     }
     return ret;

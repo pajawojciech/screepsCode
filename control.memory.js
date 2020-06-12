@@ -71,7 +71,7 @@ module.exports = { run: function()
             {
                 var val = sources[source];
                 var item = { "sourceId" : val, "home" : room.name };
-                /*
+                
                 var count = 0;
                 var sourcePos = Game.getObjectById(val).pos;
                 var x = sourcePos.x;
@@ -85,7 +85,7 @@ module.exports = { run: function()
                     }
                 }
                 item.space = count;
-                */
+                
                 Memory.sources.push(item);
             }   
         }
@@ -193,9 +193,9 @@ module.exports = { run: function()
                 if(typeof(controller.reservation) != 'undefined' && controller.reservation.ticksToEnd > 100)
                 {
                     var sources = room.find(FIND_SOURCES);
-                    for(var i in sources)
+                    for(var s in sources)
                     {
-                        var source = sources[i];
+                        var source = sources[s];
                         if(!sourcesMemory.includes(source.id))
                         {
                             var item = { "sourceId" : source.id, "space" : 1, "ext" : true, "home" : Memory.claim[i].home };
