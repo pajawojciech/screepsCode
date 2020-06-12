@@ -239,6 +239,9 @@ var prepareCL = function(sp)
 
 var prepareA = function(sp)
 {
+    var ATTACK_ROOM = 2;
+    var ATTACK_ID = 3;
+    
     var ret = 0;
     for(var i in Memory.claim.filter((x) => x.home == sp.room.name))
     {
@@ -254,10 +257,10 @@ var prepareA = function(sp)
                 
                 if(x1 + x2 > 0)
                 {
-                    ret += 4;
+                    ret += ATTACK_ROOM;
                     
                     var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && creep.memory.attack == roomName).length; 
-                    if(cr < 4)
+                    if(cr < ATTACK_ROOM)
                     {
                         var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && typeof(creep.memory.attack) == 'undefined');
                         if(crFree.length > 0)
@@ -275,8 +278,27 @@ var prepareA = function(sp)
         var x1 = room.find(FIND_HOSTILE_CREEPS).length;
         if(x1 > 0)
         {
-            ret += 4;
+            ret += ATTACK_ROOM;
         }
+    }
+    if(typeof(Memory.attack) != 'undefined' && Memory.attack.length > 0)
+    {
+        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && creep.memory.attackId == Memory.attack[0]).length; 
+        if(cr < ATTACK_ID)
+        {
+            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && typeof(creep.memory.attack) == 'undefined');
+            if(crFree.length > 0)
+            {
+                var obj = Game.getObjectById(Memory.attack[0]);
+                if(obj != null)
+                {
+                    crFree[0].memory.attackId = Memory.attack[0];
+                    crFree[0].memory.attack = obj.room.name;
+                }
+            }
+        }
+        
+        ret+= ATTACK_ID;
     }
     return ret;
 }

@@ -8,6 +8,32 @@ var roleAttacker = {
             creep.moveTo(f.pos);
             return;
         }
+        
+        if(typeof(creep.memory.attackId) != 'undefined' )
+        {
+            var obj = Game.getObjectById(creep.memory.attackId);
+            if(obj != null)
+            {
+                var res = creep.attack(obj);
+                if(res == ERR_NOT_IN_RANGE) 
+                {
+                    creep.moveTo(obj);
+                }
+                return;
+            }
+            else
+            {
+                for(var i in Memory.attack)
+                {
+                    if(Memory.attack[i] == creep.memory.attackId)
+                    {
+                        Memory.attack.splice(i, 1);
+                    }
+                }
+                delete creep.memory.attackId;
+				delete creep.memory.attack;
+            }
+        }
 
         var roomName = creep.memory.attack;
         if(typeof(roomName) == 'undefined')
@@ -56,7 +82,7 @@ var roleAttacker = {
             else
             {
                 delete creep.memory.attack;
-                creep.moveTo(new RoomPosition(25,25, creep.room.name));
+                //creep.moveTo(new RoomPosition(25,25, creep.room.name));
             }
         }
 	}
