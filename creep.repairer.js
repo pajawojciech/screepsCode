@@ -141,6 +141,14 @@ var sortStructuresByHits = function(x,y) //procentowo najsłabszy
     }
     else if(xg == yg)
     {
+        if(xg.structureType == STRUCTURE_RAMPART && yg.structureType == STRUCTURE_WALL)
+        {
+            return -1;
+        }
+        else if(xg.structureType == STRUCTURE_WALL && yg.structureType == STRUCTURE_RAMPART)
+        {
+            return 1;
+        }
         return 0;
     }
     return -1;
