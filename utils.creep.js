@@ -43,10 +43,10 @@ module.exports = {
             var closestSource = creep.pos.findClosestByRange(sourcesInRange);
             
             var res = creep.harvest(closestSource, RESOURCE_ENERGY);
-            if(creep.harvest(closestSource) == ERR_NOT_IN_RANGE) {
+            if(res == ERR_NOT_IN_RANGE) {
                 creep.moveTo(closestSource, {maxRooms: 1});
             }
-            if(say)creep.say('source' + MAX_RANGE);
+            if(say)creep.say(res + 'source' + MAX_RANGE);
             return;
         }
 
