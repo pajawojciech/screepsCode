@@ -2,6 +2,28 @@ var roleCarrier = {
     run: function(creep) {
         var GET_FROM_STORAGE = false;
         
+        if(creep.name == 'c19022110Spawn1')
+        {
+            if(creep.store.getFreeCapacity() == 0)
+            {
+                var storage = Game.getObjectById('5ececa7a8abf3530e03c1d17');
+                var res = creep.transfer(storage, RESOURCE_HYDROGEN);
+                if(res == ERR_NOT_IN_RANGE)
+                {
+                    creep.moveTo(storage);
+                }
+            }
+            else
+            {
+                var target = Game.getObjectById('5e4fa50dd27a6ff8d59f0e71');
+                creep.moveTo(target);
+                var res = creep.withdraw(target, RESOURCE_HYDROGEN);
+                creep.say(res);
+            }
+            
+            return;
+        }
+        
 	    if(creep.store.getUsedCapacity() < creep.store.getCapacity() / 2) 
 	    {
 	        delete creep.memory.targetId;

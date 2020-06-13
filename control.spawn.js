@@ -239,8 +239,8 @@ var prepareCL = function(sp)
 
 var prepareA = function(sp)
 {
-    var ATTACK_ROOM = 2;
-    var ATTACK_ID = 3;
+    var ATTACK_ROOM = 3;
+    var ATTACK_ID = 1;
     
     var ret = 0;
     for(var i in Memory.claim.filter((x) => x.home == sp.room.name))
