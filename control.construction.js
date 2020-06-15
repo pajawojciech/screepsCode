@@ -87,15 +87,21 @@ module.exports = {
                         for(var pos in path.path)
                         {
                             var pos = path.path[pos];
-                            new RoomVisual(pos.roomName).circle(pos.x, pos.y);
-                            Game.rooms[pos.roomName].createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
+                            if(typeof(Game.rooms[pos.roomName]) != 'undefined')
+                            {
+                                new RoomVisual(pos.roomName).circle(pos.x, pos.y);
+                                Game.rooms[pos.roomName].createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
+                            }
                         }
                         
                         var path = PathFinder.search(sp.pos, { pos: cont.room.controller.pos, range: 1 }, { roomCallback: roadPathCost, plainCost: 2, swampCost: 4 });
                         for(var pos in path.path)
                         {
                             var pos = path.path[pos];
-                            Game.rooms[pos.roomName].createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
+                            if(typeof(Game.rooms[pos.roomName]) != 'undefined')
+                            {
+                                Game.rooms[pos.roomName].createConstructionSite(pos.x, pos.y, STRUCTURE_ROAD);
+                            }
                         }
 
                         source.road = true;

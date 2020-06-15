@@ -243,9 +243,10 @@ var prepareA = function(sp)
     var ATTACK_ID = 3;
     
     var ret = 0;
-    for(var i in Memory.claim.filter((x) => x.home == sp.room.name))
+    var claims = Memory.claim.filter((x) => x.home == sp.room.name);
+    for(var i in claims)
     {
-        var roomName = Memory.claim[i].room;
+        var roomName = claims[i].room;
         var room = Game.rooms[roomName];
         if(typeof(room) != 'undefined')
         {
