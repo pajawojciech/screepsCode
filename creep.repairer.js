@@ -17,7 +17,7 @@ var roleRepairer = {
             roomName = creep.memory.room;
         }
 
-        if(roomName != creep.room.name)
+        if(roomName != creep.room.name && creep.memory.work)
         {
             delete creep.memory.targetId;
             utils.goToRoom(creep, roomName);
@@ -69,7 +69,7 @@ var roleRepairer = {
 	                sp = spArr[0];
 	            }
 
-	            if(typeof(sp) == 'undefined' || typeof(sp.memory.towerId) == 'undefined')
+	            if(typeof(sp) == 'undefined' || typeof(sp.memory) == 'undefined' || typeof(sp.memory.towerId) == 'undefined')
 	            {
 	                targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
@@ -78,7 +78,16 @@ var roleRepairer = {
                             && structure.hits != structure.hitsMax);
                         }
                     });
-                    target = targets.sort(sortStructuresByHits)[0];
+                    var targetsSort = targets.sort(sortStructuresByHits);
+                    var targetsRamp = targetsSort.filter((x) => x.structureType == STRUCTURE_RAMPART && x.hits == 1);
+                    if(targetsRamp.length > 0)
+                    {
+                        target = targetsRamp[0];
+                    }
+                    else
+                    {
+                        target = targetsSort[0];
+                    }
 	            }
 	            else
 	            {
@@ -124,7 +133,10 @@ var roleRepairer = {
             }
             else
             {
-	            utils.getEnergy(creep);
+	            if(utils.getEnergy(creep) === false)
+	            {
+	                creep.moveTo(Game.rooms[creep.memory.room].controller);
+	            }
             }
         }
 	}

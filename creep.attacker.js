@@ -71,7 +71,7 @@ var roleAttacker = {
         }
         else
         {
-            var enemySt = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
+            var enemySt = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {filter: (x) => x.structureType != STRUCTURE_STORAGE});
             if(enemySt != null)
             {
                 var res2 = creep.attack(enemySt);

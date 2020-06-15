@@ -204,7 +204,22 @@ var prepareC = function(sp)
         }
     }
     
-    return sources.length + Memory.claim.filter((x) => x.home == sp.room.name).length;
+    var st = 0;
+    if(typeof(Memory.steal) != 'undefined')
+    {
+        st++;
+        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && creep.memory.steal == Memory.steal).length; 
+        if(cr < 1)
+        {
+            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && typeof(creep.memory.assignedCont) == 'undefined' && typeof(creep.memory.steal) == 'undefined');
+            if(crFree.length > 0)
+            {
+                crFree[0].memory.steal = Memory.steal;
+            }
+        }
+    }
+    
+    return sources.length + Memory.claim.filter((x) => x.home == sp.room.name).length + st;
 }
 
 var prepareCL = function(sp)
@@ -239,8 +254,8 @@ var prepareCL = function(sp)
 
 var prepareA = function(sp)
 {
-    var ATTACK_ROOM = 2;
-    var ATTACK_ID = 3;
+    var ATTACK_ROOM = 3;
+    var ATTACK_ID = 1;
     
     var ret = 0;
     var claims = Memory.claim.filter((x) => x.home == sp.room.name);

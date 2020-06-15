@@ -1,42 +1,45 @@
 /* 
 MEMORY
+-attack[] - tablica id do zniszczenia
 -claim[]
-    -room
-    -home
-    -getRoom
+    -room - pokój do zdobycia
+    -home - pokój matka
+    -getRoom - ? zrób claim : claim zrobiony, undef - bez claima
 -creeps[]
-    -role
-    -room
+    -role - wykonywana rola
+    -room - pokój matka
     >a
-        -attack
+        -attack - pokój do ataku
+        -attackId - id do ataku
     >b
-        -destRoom
-        -building
+        -destRoom - pokój przeznaczenia
+        -building - czy pracuje
     >c
-        -targetId
-        -containerId
-        -assignedCont
+        -targetId - skąd właśnie bierze energię
+        -containerId - gdzie zanosi energię
+        -assignedCont - przypisany contener
+        -steal - id do pobierania surowców
     >d
-        -sourceId
+        -sourceId - przypisane źródło
     >h
-        -transf
+        -transf - ? pracuje : zbiera energie
     >r
-        -work
-        -targetId
-        -destRoom
+        -work ? pracuje : zbiera energie
+        -targetId - id celu
+        -destRoom - pokój przeznaczenia
     >u
-        -upgrading
+        -upgrading ? upgraduje : zbiera energie
     >cl
         -claim - room do przejęcia
         -home - jeszcze nie jest uzywane
         -getRoom - zajecie pokoju
 -sources[]
     -sourceId
-    -space - miejsce wokół source - usuniete
+    -space - ilosc miejsca wokół source
     -newContainer - powstało construction site, false jeśli zbudowane
     -containerId
     -road - droga wyznaczona do controller i spawn
-    -home
+    -home - pokój odpowiedzialny
 -spawns[]
     newContainer
     containerId
@@ -45,8 +48,9 @@ MEMORY
     containerId2
     newTower
     towerId
-	wall
+	wall - czy był budowany mur
     road - droga wokół spawna i extensionów
+-steal - id storage do podbierania surowców
 */
 
 
