@@ -3,7 +3,7 @@ module.exports = {
     {
         var MAX_RANGE = 10;
        
-        var dropped = creep.pos.findInRange(FIND_DROPPED_RESOURCES, MAX_RANGE);
+        var dropped = creep.pos.findInRange(FIND_DROPPED_RESOURCES, MAX_RANGE, {filter : (x) => x.resourceType == RESOURCE_ENERGY});
         if(dropped.length > 0)
         {
             var closestDropped = creep.pos.findClosestByRange(dropped);
@@ -37,17 +37,20 @@ module.exports = {
 
         var sources = creep.room.find(FIND_SOURCES_ACTIVE);
         
-        var sourcesInRange = creep.pos.findInRange(sources, MAX_RANGE);
-        if(sourcesInRange.length > 0)
+        if(creep.room.controller.owner == null || creep.room.controller.owner.username == creep.owner.username)
         {
-            var closestSource = creep.pos.findClosestByRange(sourcesInRange);
-            
-            var res = creep.harvest(closestSource, RESOURCE_ENERGY);
-            if(res == ERR_NOT_IN_RANGE) {
-                creep.moveTo(closestSource, {maxRooms: 1});
+            var sourcesInRange = creep.pos.findInRange(sources, MAX_RANGE);
+            if(sourcesInRange.length > 0)
+            {
+                var closestSource = creep.pos.findClosestByRange(sourcesInRange);
+                
+                var res = creep.harvest(closestSource, RESOURCE_ENERGY);
+                if(res == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(closestSource, {maxRooms: 1});
+                }
+                if(say)creep.say(res + 'source' + MAX_RANGE);
+                return;
             }
-            if(say)creep.say(res + 'source' + MAX_RANGE);
-            return;
         }
 
         if(containers.length > 0)
@@ -58,9 +61,18 @@ module.exports = {
             return;
         }
 
-        var closestSource = creep.pos.findClosestByRange(sources);
-        creep.moveTo(closestSource, {maxRooms: 1});
-        if(say)creep.say('source L');
+        if(creep.room.controller.owner == null || creep.room.controller.owner.username == creep.owner.username)
+        {
+            var closestSource = creep.pos.findClosestByRange(sources);
+            creep.moveTo(closestSource, {maxRooms: 1});
+            if(say)creep.say('source L');
+            return;
+        }
+        else
+        {
+            if(say)creep.say('false');
+            return false;
+        }
     },
     
     goToRoom : function (creep, roomName)
@@ -90,6 +102,14 @@ module.exports = {
             {
                 creep.say('error');
             }
+        }
+    },
+    
+    dropResources : function(creep)
+    {
+        if(creep.store.getUsedCapacity() != creep.store.getUsedCapacity(RESOURCE_ENERGY))
+        {
+            creep.drop(RESOURCE_HYDROGEN);
         }
     }
     

@@ -15,6 +15,10 @@ var roleCarrier = {
             }
             else
             {
+                if(creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
+                {
+                    creep.drop(RESOURCE_ENERGY);
+                }
                 var target = Game.getObjectById(creep.memory.steal);
                 creep.moveTo(target);
                 var res = creep.withdraw(target, RESOURCE_HYDROGEN);
@@ -27,7 +31,7 @@ var roleCarrier = {
 	    {
 	        delete creep.memory.targetId;
 
-            var dropped = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2);
+            var dropped = creep.pos.findInRange(FIND_DROPPED_RESOURCES, 2, {filter : (x) => x.resourceType == RESOURCE_ENERGY});
             if(dropped.length > 0)
             {
                 var closestDropped = creep.pos.findClosestByRange(dropped);

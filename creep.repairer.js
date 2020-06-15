@@ -17,7 +17,7 @@ var roleRepairer = {
             roomName = creep.memory.room;
         }
 
-        if(roomName != creep.room.name)
+        if(roomName != creep.room.name && creep.memory.work)
         {
             delete creep.memory.targetId;
             utils.goToRoom(creep, roomName);
@@ -133,7 +133,10 @@ var roleRepairer = {
             }
             else
             {
-	            utils.getEnergy(creep);
+	            if(utils.getEnergy(creep) === false)
+	            {
+	                creep.moveTo(Game.rooms[creep.memory.room].controller);
+	            }
             }
         }
 	}
