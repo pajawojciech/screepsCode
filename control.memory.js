@@ -72,7 +72,7 @@ module.exports = { run: function()
     {
         Memory.claim = [];
     }
-    if(typeof(Memory.sources) == 'undefined')
+    if(typeof(Memory.sources) == 'undefined' || Memory.sources.length == 0)
     {
         Memory.sources = [];
         

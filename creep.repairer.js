@@ -103,6 +103,11 @@ var roleRepairer = {
                 {
                     creep.memory.targetId = target.id;
                 }
+                else
+                {
+                    roleUpgrader.run(creep);
+                    return;
+                }
 	        }
 	        else
 	        {

@@ -18,16 +18,7 @@ module.exports = {
             
             sp.memory.containerCount = cont;
             
-            if(cont + contB == 0) //jeśli nie ma zbudowanych i budowanych containerów buduj pierwszy container
-            {
-                var source = sp.room.find(FIND_SOURCES)[0];
-                var res = createConstructionX(source.pos, STRUCTURE_CONTAINER);
-                if(res == 0)
-                {
-                    Memory.sources.find(function (x) { return x.sourceId == source.id; }).newContainer = true;
-                }
-            }
-            else if(extB == 0) //jeśli skończony pierwszy container buduj extensiony
+            if(extB == 0 && contB == 0)
             {
                 extensions = createConstructionSquare(sp.pos, STRUCTURE_EXTENSION);//, true, 6);
             }
@@ -53,7 +44,7 @@ module.exports = {
             }
             
             //jeśli jest max extensionów buduj kontenery do reszty source
-            if(extensions == ERR_RCL_NOT_ENOUGH && contB + extB == 0 && sp.room.controller.level > 1 && typeof(Memory.sources) != 'undefined')
+            if(sp.room.controller.level > 1 && typeof(Memory.sources) != 'undefined')
             {
                 var sources = Memory.sources.filter(function(x) { return typeof(x.newContainer) == 'undefined' } );
                 if(sources.length > 0)
@@ -77,7 +68,7 @@ module.exports = {
                         }
                     }
                 }
-                else //drogi
+                else if(extensions == ERR_RCL_NOT_ENOUGH && contB + extB == 0)//drogi
                 {
                     var source = Memory.sources.find(function(x) { return typeof(x.road) == 'undefined' } );
                     if(typeof(source) != 'undefined')
@@ -120,7 +111,7 @@ module.exports = {
                 }
                 else
                 {
-                    res = createConstructionSquare(sp.pos, STRUCTURE_CONTAINER);
+                    res = createConstructionSquare(sp.pos, STRUCTURE_CONTAINER, false);
                 }
                 if(res == 0)
                 {
@@ -137,7 +128,7 @@ module.exports = {
                 }
             }
             
-            if(typeof(sp.memory.newContainer2) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont >= Memory.sources.length)
+            if(typeof(sp.memory.newContainer2) == 'undefined' && extensions == ERR_RCL_NOT_ENOUGH && cont >= Memory.sources.length && cont > 1)
             {
                 var nearbyContainer = controller.pos.findInRange(FIND_STRUCTURES, 4, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
                 
@@ -148,7 +139,7 @@ module.exports = {
                 }
                 else
                 {
-                    res = createConstructionX(controller.pos, STRUCTURE_CONTAINER);
+                    res = createConstructionX(controller.pos, STRUCTURE_CONTAINER, 3);
                 }
                 if(res == 0)
                 {
@@ -208,9 +199,9 @@ module.exports = {
     }
 };
 
-var createConstructionX = function(pos, type)
+var createConstructionX = function(pos, type, start = 1)
 {
-    var rad = 1; 
+    var rad = start; 
     var x = pos.x;
     var y = pos.y;
     var step = 0;
