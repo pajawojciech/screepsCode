@@ -2,27 +2,31 @@ var roleCarrier = {
     run: function(creep) {
         var GET_FROM_STORAGE = false;
          
-        if(typeof(creep.memory.steal) != 'undefined')
+        if(typeof(creep.memory.stealFrom) != 'undefined')
         {
-            if(creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
+            //if(creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
             {
-                creep.drop(RESOURCE_ENERGY);
+                //creep.drop(RESOURCE_ENERGY);
             }
+            var type = creep.memory.stealType;
             
             if(creep.store.getFreeCapacity() == 0)
             {
-                var storage = Game.getObjectById('5ef01d149f537b07c36e8a69');
-                var res = creep.transfer(storage, RESOURCE_HYDROGEN);
+                var target = Game.getObjectById(creep.memory.stealTo);
+                var res = creep.transfer(target, type);
                 if(res == ERR_NOT_IN_RANGE)
                 {
-                    creep.moveTo(storage);
+                    creep.moveTo(target);
                 }
             }
             else
             {
-                var target = Game.getObjectById(creep.memory.steal);
-                creep.moveTo(target);
-                var res = creep.withdraw(target, RESOURCE_HYDROGEN);
+                var target = Game.getObjectById(creep.memory.stealFrom);
+                var res = creep.withdraw(target, type);
+                if(res == ERR_NOT_IN_RANGE)
+                {
+                    creep.moveTo(target);
+                }
             }
             
             return;

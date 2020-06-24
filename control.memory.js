@@ -18,7 +18,9 @@ MEMORY
         -targetId - skąd właśnie bierze energię
         -containerId - gdzie zanosi energię
         -assignedCont - przypisany contener
-        -steal - id do pobierania surowców
+        -stealFrom - id do brania
+        -stealTo - id do oddawania
+        -stealType - typ surowca
     >d
         -sourceId - przypisane źródło
     >h
@@ -50,7 +52,11 @@ MEMORY
     towerId
 	wall - czy był budowany mur
     road - droga wokół spawna i extensionów
--steal - id storage do podbierania surowców
+-steal[]
+    -from 
+    -to
+    -room
+    -type
 */
 
 
