@@ -231,13 +231,25 @@ var prepareC = function(sp)
 
 var prepareCL = function(sp)
 {
+    var eca = sp.room.energyCapacityAvailable;
+    var limit = getBody('cl', eca).limit;
     var claims = Memory.claim.filter((x) => (typeof(x.getRoom) == 'undefined' || x.getRoom) && x.home == sp.room.name );
+    var res = 0;
     for(var i in claims)
     {
         var roomName = claims[i].room;
+        var room = Game.rooms[roomName];
+        if(typeof(room) != 'undefined' && room.controller.reservation != null && room.controller.reservation.ticksToEnd < 4000)
+        {
+            res += limit;
+        }
+        else
+        {
+            res++;
+        }
         
         var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.room == sp.room.name && creep.memory.claim == roomName).length; 
-        if(cr < 1)
+        if(cr < limit)
         {
             var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.room == sp.room.name && typeof(creep.memory.claim) == 'undefined');
             if(crFree.length > 0)
@@ -256,7 +268,7 @@ var prepareCL = function(sp)
             }
         }
     }
-    return Memory.claim.filter((x) => x.home == sp.room.name && x.getRoom != false).length;
+    return res;
 }
 
 var prepareA = function(sp)
