@@ -1,12 +1,17 @@
 var roleCarrier = {
     run: function(creep) {
         var GET_FROM_STORAGE = false;
-        
+         
         if(typeof(creep.memory.steal) != 'undefined')
         {
+            if(creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
+            {
+                creep.drop(RESOURCE_ENERGY);
+            }
+            
             if(creep.store.getFreeCapacity() == 0)
             {
-                var storage = Game.getObjectById('5ececa7a8abf3530e03c1d17');
+                var storage = Game.getObjectById('5ef01d149f537b07c36e8a69');
                 var res = creep.transfer(storage, RESOURCE_HYDROGEN);
                 if(res == ERR_NOT_IN_RANGE)
                 {
@@ -15,10 +20,6 @@ var roleCarrier = {
             }
             else
             {
-                if(creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
-                {
-                    creep.drop(RESOURCE_ENERGY);
-                }
                 var target = Game.getObjectById(creep.memory.steal);
                 creep.moveTo(target);
                 var res = creep.withdraw(target, RESOURCE_HYDROGEN);
@@ -102,6 +103,10 @@ var roleCarrier = {
                 {
                     creep.memory.targetId = minEnergy(targets).id;
                 }
+                else if(typeof(room.terminal) != 'undefined' && room.terminal.store.getFreeCapacity() > 0)
+                {
+                    creep.memory.targetId = room.terminal.id;
+                }
                 else if(typeof(room.storage) != 'undefined')
                 {
                     creep.memory.targetId = room.storage.id;
@@ -111,7 +116,7 @@ var roleCarrier = {
                     creep.moveTo(room.controller);
                 }
 	        }
-	        
+
 	        var target = Game.getObjectById(creep.memory.targetId);
             
             if(typeof(target) != 'undefined')
