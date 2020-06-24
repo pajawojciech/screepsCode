@@ -45,7 +45,7 @@ var roleRepairer = {
     	        var target = creep.pos.findClosestByRange(targets);
     	        var res = creep.build(target) ;
                 if(res == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target);
+                    creep.moveTo(target, { maxRooms : 1 });
                 }
                 else if(res == ERR_INVALID_TARGET)
                 {
