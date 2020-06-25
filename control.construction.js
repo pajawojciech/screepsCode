@@ -61,9 +61,10 @@ module.exports = {
                     var source = Game.getObjectById(sources[0].sourceId);
                     if(source != null)
                     {
-                        var nearbyContainer = source.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } );
+                        var nearbyContainer = source.pos.findInRange(FIND_STRUCTURES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length
+                                            + source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, CONT_RANGE, { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
                         var res;
-                        if(nearbyContainer.length > 0)
+                        if(nearbyContainer > 0)
                         {
                             res = 0;
                         }
@@ -304,8 +305,19 @@ var createConstructionSquare = function(pos, type, even = true, range = 5, one =
 var roadPathCost = function(roomName) {
 
     let room = Game.rooms[roomName];
-    if (!room) return;
     let costs = new PathFinder.CostMatrix;
+    if (!room) 
+    {
+        var i; var j;
+        for(i = 0; i<= 49; i++)
+        {
+            for(j = 0; j<=49; j++)
+            {
+                costs.set(i, j, 0xff);
+            }
+        }
+        return costs;
+    }
     
     room.find(FIND_STRUCTURES).forEach(function(struct) 
     {
