@@ -63,7 +63,6 @@ var checkAndCreate = function(sp, role, limit) //zwraca informację, czy limit s
 {
     var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == sp.room.name && (creep.ticksToLive > 50 || typeof(creep.ticksToLive) == 'undefined'));
 	var energyCap = sp.memory.eca;
-	
 	if((role == 'h' || role == 'd') && cr.length == 0)
 	{
 	    energyCap = (sp.room.energyAvailable > 300) ? sp.room.energyAvailable : 300;
@@ -108,13 +107,13 @@ var prepareB = function(sp)
         var claimRoom = Game.rooms[roomName];
         if(typeof(claimRoom) != 'undefined' && claimRoom.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.my }).length > 0)
         {
-            var t = 1;
-            b++;
-            if(claimRoom.controller.my)
-            {
-                b += 1;
-                t = 2;
-            }
+            var t = getBody('b', eca).limit;
+            b = b + t;
+            //if(claimRoom.controller.my)
+            //{
+                //b += 1;
+                //t = 2;
+            //}
             
             var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && creep.memory.destRoom == roomName && creep.memory.room == sp.room.name).length; 
             if(cr < t)
@@ -231,7 +230,7 @@ var prepareC = function(sp)
 
 var prepareCL = function(sp)
 {
-    var eca = sp.room.energyCapacityAvailable;
+    var eca = sp.memory.eca;
     var limit = getBody('cl', eca).limit;
     var claims = Memory.claim.filter((x) => (typeof(x.getRoom) == 'undefined' || x.getRoom) && x.home == sp.room.name );
     var res = 0;
