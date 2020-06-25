@@ -198,9 +198,14 @@ module.exports = {
                 }
             }
             
-            if(typeof(room.storage) == 'undefined' && room.controller.level > 4)
+            if(typeof(room.storage) == 'undefined' && room.controller.level >= 4 && extB == 0)
             {
                 createConstructionSquare(sp.pos, STRUCTURE_STORAGE);
+            }
+            
+            if(typeof(room.terminal) == 'undefined' && room.controller.level >= 6 && extB == 0)
+            {
+                createConstructionSquare(sp.pos, terminal);
             }
             
             //Memory.testwall = createWall('W3N9', Memory.testwall);
