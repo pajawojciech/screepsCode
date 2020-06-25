@@ -62,7 +62,7 @@ var roleSpawn = {
 var checkAndCreate = function(sp, role, limit) //zwraca informację, czy limit spełniony
 {
     var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == sp.room.name && (creep.ticksToLive > 50 || typeof(creep.ticksToLive) == 'undefined'));
-	var energyCap = sp.room.energyCapacityAvailable;
+	var energyCap = sp.memory.eca;
 	
 	if((role == 'h' || role == 'd') && cr.length == 0)
 	{
@@ -99,7 +99,7 @@ var checkAndCreate = function(sp, role, limit) //zwraca informację, czy limit s
 
 var prepareB = function(sp)
 {
-    var eca = sp.room.energyCapacityAvailable;
+    var eca = sp.memory.eca;
     var b = sp.room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0 ? getBody('b', eca).limit : 0;
     var claims = Memory.claim.filter((x) => x.home == sp.room.name );
     for(var i in claims)
@@ -132,7 +132,7 @@ var prepareB = function(sp)
 
 var prepareR = function(sp)
 {
-    var eca = sp.room.energyCapacityAvailable;
+    var eca = sp.memory.eca;
     var ret = getBody('r', eca).limit;
     var claims = Memory.claim.filter((x) => x.home == sp.room.name );
     for(var i in claims)
@@ -158,7 +158,7 @@ var prepareR = function(sp)
 
 var prepareD = function(sp)
 {
-    var eca = sp.room.energyCapacityAvailable;
+    var eca = sp.memory.eca;
     var d = 0;
     var dLimit = getBody('d', eca).limit;
     if(typeof(dLimit) == 'undefined') dLimit = 0;

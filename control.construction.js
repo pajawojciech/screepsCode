@@ -14,6 +14,15 @@ module.exports = {
             var ext = sp.room.find(FIND_MY_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
             var extB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
             
+            if(isNaN(sp.room.energyCapacityAvailable))
+            {
+                sp.memory.eca = ext * (sp.room.controller.level == 8 ? 200 : sp.room.controller.level == 7 ? 100 : 50);// + 300;
+            }
+            else
+            {
+                sp.memory.eca = sp.room.energyCapacityAvailable;
+            }
+
             var extensions;
             
             sp.memory.containerCount = cont;
