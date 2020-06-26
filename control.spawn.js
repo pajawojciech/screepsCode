@@ -28,16 +28,19 @@ var roleSpawn = {
                 var cont = sp.room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
                 if(cont > 0)
                 {
-                    checkAndCreate(sp, 'u');
-    
                     if(typeof(Memory.sources) != 'undefined')
                     {
                         if(checkAndCreate(sp, 'd', d))
                         {
-                            checkAndCreate(sp, 'c', c);
+                            if(typeof(Memory.claim) != 'undefined')
+                            {
+                                checkAndCreate(sp, 'cl', cl);
+                            }
                             
                             checkAndCreate(sp, 'r', r);
         
+                            checkAndCreate(sp, 'c', c);
+                            
                             //if(typeof(sp.memory.towerId) == 'undefined')
                             //{
                                 //var ill = sp.room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
@@ -46,13 +49,10 @@ var roleSpawn = {
                                     //checkAndCreate(sp, 'he');
                                 //}
                             //}
-        
-                            if(typeof(Memory.claim) != 'undefined')
-                            {
-                                checkAndCreate(sp, 'cl', cl);
-                            }
                         }
                     }
+                    
+                    checkAndCreate(sp, 'u');
                 }
             }
         }
@@ -306,7 +306,7 @@ var prepareA = function(sp)
             }
         }
     }
-    if(typeof(sp.memory.towerId) == 'undefined')
+    if(sp.memory.towers > 0)
     {
         var room = sp.room;
         var x1 = room.find(FIND_HOSTILE_CREEPS).length;

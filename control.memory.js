@@ -48,8 +48,7 @@ MEMORY
     containerCount - kontenery w pomieszczeniu {do wyrzucenia}
     newContainer2
     containerId2
-    newTower
-    towerId
+    towers
 	wall - czy był budowany mur
     road - droga wokół spawna i extensionów
 -steal[]

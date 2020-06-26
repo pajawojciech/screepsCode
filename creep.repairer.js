@@ -69,7 +69,7 @@ var roleRepairer = {
 	                sp = spArr[0];
 	            }
 
-	            if(typeof(sp) == 'undefined' || typeof(sp.memory) == 'undefined' || typeof(sp.memory.towerId) == 'undefined')
+	            if(typeof(sp) == 'undefined' || typeof(sp.memory) == 'undefined' || sp.memory.towers == 0)
 	            {
 	                targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {

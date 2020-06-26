@@ -7,12 +7,14 @@ module.exports = {
         {
             var sp = Game.spawns[name];
             var room = sp.room;
-            var cont = sp.room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
-            var contB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
+            var cont = room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
+            var contB = room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
             var controller = room.controller;
+            var towers = room.find(FIND_STRUCTURES, {filter: (st) => st.structureType == STRUCTURE_TOWER }).length;
+            var towersB = room.find(FIND_CONSTRUCTION_SITES, {filter: (st) => st.structureType == STRUCTURE_TOWER }).length;
             
-            var ext = sp.room.find(FIND_MY_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
-            var extB = sp.room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
+            var ext = room.find(FIND_MY_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
+            var extB = room.find(FIND_MY_CONSTRUCTION_SITES,  { filter: (st) => st.structureType == STRUCTURE_EXTENSION } ).length;
             
             if(isNaN(sp.room.energyCapacityAvailable))
             {
@@ -171,40 +173,19 @@ module.exports = {
                 createConstructionSquare(sp.pos, STRUCTURE_ROAD, false, 3, false);
                 sp.memory.road = true;
             }
-
-            if(ext > 10 && typeof(sp.memory.newTower) == 'undefined' && contB + extB == 0 && cont > 2 && sp.room.controller.level > 3)
+            
+            sp.memory.towers = towers;
+            if(extB == 0 && towers + towersB < CONTROLLER_STRUCTURES.tower[room.controller.level])
             {
-                var nearbyTower = sp.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_TOWER } );
-                var res;
-                if(nearbyTower.length > 0)
-                {
-                    res = 0;
-                }
-                else
-                {
-                    res = createConstructionSquare(sp.pos, STRUCTURE_TOWER);
-                }
-                if(res == 0)
-                {
-                    sp.memory.newTower = true;
-                }
-            }
-            if(typeof(sp.memory.newTower) != 'undefined' && sp.memory.newTower)
-            {
-                var nearbyTower = sp.pos.findInRange(FIND_STRUCTURES, 5, { filter: (st) => st.structureType == STRUCTURE_TOWER } );
-                if(nearbyTower.length > 0)
-                {
-                    sp.memory.newTower = false;
-                    sp.memory.towerId = nearbyTower[0].id;
-                }
+                res = createConstructionSquare(sp.pos, STRUCTURE_TOWER);
             }
             
-            if(typeof(room.storage) == 'undefined' && room.controller.level >= 4 && extB == 0)
+            if(typeof(room.storage) == 'undefined' && CONTROLLER_STRUCTURES.storage[room.controller.level] > 0 && extB == 0)
             {
                 createConstructionSquare(sp.pos, STRUCTURE_STORAGE);
             }
             
-            if(typeof(room.terminal) == 'undefined' && room.controller.level >= 6 && extB == 0)
+            if(typeof(room.terminal) == 'undefined' && CONTROLLER_STRUCTURES.terminal[room.controller.level] > 0 && extB == 0)
             {
                 createConstructionSquare(sp.pos, terminal);
             }
