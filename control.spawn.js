@@ -32,14 +32,14 @@ var roleSpawn = {
                     {
                         if(checkAndCreate(sp, 'd', d))
                         {
+                            checkAndCreate(sp, 'c', c);
+
+                            checkAndCreate(sp, 'r', r);
+                            
                             if(typeof(Memory.claim) != 'undefined')
                             {
                                 checkAndCreate(sp, 'cl', cl);
                             }
-                            
-                            checkAndCreate(sp, 'r', r);
-        
-                            checkAndCreate(sp, 'c', c);
                             
                             //if(typeof(sp.memory.towerId) == 'undefined')
                             //{

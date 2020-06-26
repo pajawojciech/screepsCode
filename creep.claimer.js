@@ -38,9 +38,13 @@ var role = {
                             }
                         }
                     }
-                    if(res == -15)
+                    if(res == ERR_GCL_NOT_ENOUGH)
                     {
-                        //delete creep.memory.getRoom;
+                        res = creep.reserveController(contr);
+                    }
+                    if(res == ERR_NOT_IN_RANGE)
+                    {
+                        creep.moveTo(contr.pos, {maxRooms: 1});
                     }
                 }
                 else
