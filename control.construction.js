@@ -29,9 +29,13 @@ module.exports = {
             
             sp.memory.containerCount = cont;
             
-            if(extB == 0 && contB == 0)
+            if(CONTROLLER_STRUCTURES.extension[room.controller.level] == ext)
             {
-                extensions = createConstructionSquare(sp.pos, STRUCTURE_EXTENSION);//, true, 6);
+                extensions = ERR_RCL_NOT_ENOUGH;
+            }
+            else if(extB == 0 && contB == 0)
+            {
+                extensions = createConstructionSquare(sp.pos, STRUCTURE_EXTENSION, true, 6);
             }
             
             //ustaw memory sources containerId
@@ -168,9 +172,9 @@ module.exports = {
                 }
             }
             
-            if(ext > 10 && typeof(sp.memory.road) == 'undefined' && contB + extB == 0 && cont > 2)
+            if(room.controller.level > 2 && typeof(sp.memory.road) == 'undefined' && contB + extB == 0 && cont > 2)
             {
-                createConstructionSquare(sp.pos, STRUCTURE_ROAD, false, 3, false);
+                createConstructionSquare(sp.pos, STRUCTURE_ROAD, false, room.controller.level > 4 ? 4 : 3, false);
                 sp.memory.road = true;
             }
             
@@ -187,7 +191,7 @@ module.exports = {
             
             if(typeof(room.terminal) == 'undefined' && CONTROLLER_STRUCTURES.terminal[room.controller.level] > 0 && extB == 0)
             {
-                createConstructionSquare(sp.pos, terminal);
+                createConstructionSquare(sp.pos, STRUCTURE_TERMINAL);
             }
             
             //Memory.testwall = createWall('W3N9', Memory.testwall);
@@ -237,6 +241,8 @@ var createConstructionSquare = function(pos, type, even = true, range = 5, one =
     var y = pos.y;
     var step = 0;
     var loop = true;
+    var terrain = new Room.Terrain(pos.roomName);
+    
     while(loop)
     {
         switch(step)
@@ -273,8 +279,12 @@ var createConstructionSquare = function(pos, type, even = true, range = 5, one =
         step = step % 5;
         if((x + y + pos.x + pos.y) % 2 == (even ? 0 : 1))
         {
-            //Game.rooms[pos.roomName].visual.circle(x, y);
-            var res = Game.rooms[pos.roomName].createConstructionSite(x, y, type);
+            var res = -100;
+            if(terrain.get(x,y) != TERRAIN_MASK_WALL)
+            {
+                //Game.rooms[pos.roomName].visual.circle(x, y);
+                res = Game.rooms[pos.roomName].createConstructionSite(x, y, type);
+            }
         }
 
         if(one && (res == OK || res == ERR_RCL_NOT_ENOUGH)) return res;
@@ -284,7 +294,7 @@ var createConstructionSquare = function(pos, type, even = true, range = 5, one =
 
 
 var roadPathCost = function(roomName) {
-
+    
     let room = Game.rooms[roomName];
     let costs = new PathFinder.CostMatrix;
     if (!room) 
