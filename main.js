@@ -3,6 +3,7 @@ var memory = require('control.memory');
 var constructor = require('control.construction');
 var creeps = require('control.creeps');
 var tower = require('control.tower');
+var market = require('control.market');
 
 module.exports.loop = function () {
 
@@ -11,5 +12,7 @@ module.exports.loop = function () {
     spawner.run(); 
     creeps.run();
     tower.run();
-
+    market.run();
+ 
 };
+
