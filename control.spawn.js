@@ -45,9 +45,14 @@ var roleSpawn = {
                         if(checkAndCreate(sp, 'd', d))
                         {
                             checkAndCreate(sp, 'c', c);
-                            
+
                             checkAndCreate(sp, 'r', r);
-        
+                            
+                            if(typeof(Memory.claim) != 'undefined')
+                            {
+                                checkAndCreate(sp, 'cl', cl);
+                            }
+                            
                             //if(typeof(sp.memory.towerId) == 'undefined')
                             //{
                                 //var ill = sp.room.find(FIND_MY_CREEPS, { filter: (x) => x.hits < x.hitsMax });
@@ -56,13 +61,10 @@ var roleSpawn = {
                                     //checkAndCreate(sp, 'he');
                                 //}
                             //}
-        
-                            if(typeof(Memory.claim) != 'undefined')
-                            {
-                                checkAndCreate(sp, 'cl', cl);
-                            }
                         }
                     }
+                    
+                    checkAndCreate(sp, 'u');
                 }
             }
         }
@@ -72,8 +74,7 @@ var roleSpawn = {
 var checkAndCreate = function(sp, role, limit) //zwraca informację, czy limit spełniony
 {
     var cr = _.filter(Game.creeps, (creep) => creep.memory.role == role && creep.memory.room == sp.room.name && (creep.ticksToLive > 50 || typeof(creep.ticksToLive) == 'undefined'));
-	var energyCap = sp.room.energyCapacityAvailable;
-	
+	var energyCap = sp.memory.eca;
 	if((role == 'h' || role == 'd') && cr.length == 0)
 	{
 	    energyCap = (sp.room.energyAvailable > 300) ? sp.room.energyAvailable : 300;
@@ -109,7 +110,7 @@ var checkAndCreate = function(sp, role, limit) //zwraca informację, czy limit s
 
 var prepareB = function(sp)
 {
-    var eca = sp.room.energyCapacityAvailable;
+    var eca = sp.memory.eca;
     var b = sp.room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0 ? getBody('b', eca).limit : 0;
     var claims = Memory.claim.filter((x) => x.home == sp.room.name );
     for(var i in claims)
@@ -118,13 +119,13 @@ var prepareB = function(sp)
         var claimRoom = Game.rooms[roomName];
         if(typeof(claimRoom) != 'undefined' && claimRoom.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.my }).length > 0)
         {
-            var t = 1;
-            b++;
-            if(claimRoom.controller.my)
-            {
-                b += 1;
-                t = 2;
-            }
+            var t = getBody('b', eca).limit;
+            b = b + t;
+            //if(claimRoom.controller.my)
+            //{
+                //b += 1;
+                //t = 2;
+            //}
             
             var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && creep.memory.destRoom == roomName && creep.memory.room == sp.room.name).length; 
             if(cr < t)
@@ -142,7 +143,7 @@ var prepareB = function(sp)
 
 var prepareR = function(sp)
 {
-    var eca = sp.room.energyCapacityAvailable;
+    var eca = sp.memory.eca;
     var ret = getBody('r', eca).limit;
     var claims = Memory.claim.filter((x) => x.home == sp.room.name );
     for(var i in claims)
@@ -168,7 +169,7 @@ var prepareR = function(sp)
 
 var prepareD = function(sp)
 {
-    var eca = sp.room.energyCapacityAvailable;
+    var eca = sp.memory.eca;
     var d = 0;
     var dLimit = getBody('d', eca).limit;
     if(typeof(dLimit) == 'undefined') dLimit = 0;
@@ -241,13 +242,25 @@ var prepareC = function(sp)
 
 var prepareCL = function(sp)
 {
+    var eca = sp.memory.eca;
+    var limit = getBody('cl', eca).limit;
     var claims = Memory.claim.filter((x) => (typeof(x.getRoom) == 'undefined' || x.getRoom) && x.home == sp.room.name );
+    var res = 0;
     for(var i in claims)
     {
         var roomName = claims[i].room;
+        var room = Game.rooms[roomName];
+        if(typeof(room) != 'undefined' && room.controller.reservation != null && room.controller.reservation.ticksToEnd < 4000)
+        {
+            res += limit;
+        }
+        else
+        {
+            res++;
+        }
         
         var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.room == sp.room.name && creep.memory.claim == roomName).length; 
-        if(cr < 1)
+        if(cr < limit)
         {
             var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'cl' && creep.memory.room == sp.room.name && typeof(creep.memory.claim) == 'undefined');
             if(crFree.length > 0)
@@ -266,7 +279,7 @@ var prepareCL = function(sp)
             }
         }
     }
-    return Memory.claim.filter((x) => x.home == sp.room.name && x.getRoom != false).length;
+    return res;
 }
 
 var prepareA = function(sp)
@@ -307,7 +320,7 @@ var prepareA = function(sp)
             }
         }
     }
-    if(typeof(sp.memory.towerId) == 'undefined')
+    if(sp.memory.towers > 0)
     {
         var room = sp.room;
         var x1 = room.find(FIND_HOSTILE_CREEPS).length;

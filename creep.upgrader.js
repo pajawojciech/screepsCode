@@ -13,7 +13,7 @@ var roleUpgrader = {
 	    if(creep.memory.upgrading) {
 	        var controller = Game.rooms[creep.room.name].controller;
             if(creep.upgradeController(controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(controller);
+                creep.moveTo(controller, { range:3 });
             }
         }
         else {

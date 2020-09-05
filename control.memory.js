@@ -48,8 +48,7 @@ MEMORY
     containerCount - kontenery w pomieszczeniu {do wyrzucenia}
     newContainer2
     containerId2
-    newTower
-    towerId
+    towers
 	wall - czy był budowany mur
     road - droga wokół spawna i extensionów
 -steal[]
@@ -72,7 +71,7 @@ module.exports = { run: function()
     {
         Memory.claim = [];
     }
-    if(typeof(Memory.sources) == 'undefined')
+    if(typeof(Memory.sources) == 'undefined' || Memory.sources.length == 0)
     {
         Memory.sources = [];
         

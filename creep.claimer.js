@@ -17,7 +17,7 @@ var role = {
                 var res = creep.attackController(contr);
                 if(res == ERR_NOT_IN_RANGE)
                 {
-                    creep.moveTo(contr.pos);
+                    creep.moveTo(contr.pos, {maxRooms: 1});
                 }
             }
             else
@@ -37,6 +37,14 @@ var role = {
                                 Memory.claim[i].getRoom = false;
                             }
                         }
+                    }
+                    if(res == ERR_GCL_NOT_ENOUGH)
+                    {
+                        res = creep.reserveController(contr);
+                    }
+                    if(res == ERR_NOT_IN_RANGE)
+                    {
+                        creep.moveTo(contr.pos, {maxRooms: 1});
                     }
                 }
                 else

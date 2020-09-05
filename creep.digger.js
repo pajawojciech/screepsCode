@@ -1,8 +1,9 @@
 var roleDigger = {
     run: function(creep) {
-	    if(creep.store.getFreeCapacity() > 0) 
+        var source = Game.getObjectById(creep.memory.sourceId);
+        
+	    if(creep.store.getFreeCapacity() > creep.body.filter(x => x.type == 'work').length * 2) 
 	    {
-            var source = Game.getObjectById(creep.memory.sourceId);
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source);
             }
@@ -26,6 +27,7 @@ var roleDigger = {
             {
                 creep.drop(RESOURCE_ENERGY);
             }
+            creep.harvest(source);
         }
 	}
 };
