@@ -1,6 +1,6 @@
 /* 
 MEMORY
--attack[] - tablica id do zniszczenia
+-attack[] - tablica id do zniszczenia, TODO room 
 -claim[]
     -room - pokój do zdobycia
     -home - pokój matka

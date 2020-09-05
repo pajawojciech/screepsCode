@@ -17,9 +17,12 @@ var roleSpawn = {
             if(sp.spawning != null) continue;
     
             if(!checkAndCreate(sp, 'a', a)) return;
-            if(!checkAndCreate(sp, 'he', a / 4)) return;
+            //if(!checkAndCreate(sp, 'he', a / 4)) return;
             
-            //checkAndCreate(sp, 't');
+            if(sp.room.name == 'E13S23') //TODO jesli flaga istnieje
+            {
+                //checkAndCreate(sp, 't');
+            }
     
             if(checkAndCreate(sp, 'h'))
             {
@@ -28,7 +31,14 @@ var roleSpawn = {
                 var cont = sp.room.find(FIND_STRUCTURES,  { filter: (st) => st.structureType == STRUCTURE_CONTAINER } ).length;
                 if(cont > 0)
                 {
-                    checkAndCreate(sp, 'u');
+                    if(sp.room.controller.level == 8)
+                    {
+                        checkAndCreate(sp, 'u', 1);
+                    }
+                    else
+                    {
+                        checkAndCreate(sp, 'u');
+                    }
     
                     if(typeof(Memory.sources) != 'undefined')
                     {
@@ -276,7 +286,9 @@ var prepareA = function(sp)
             if(typeof(res) != 'undefined' || room.controller.my)
             {
                 var x1 = room.find(FIND_HOSTILE_CREEPS).length;
-                var x2 = room.find(FIND_HOSTILE_STRUCTURES).length;
+                var x2 = room.find(FIND_HOSTILE_STRUCTURES
+					//, {filter: (x) => x.structureType != STRUCTURE_RAMPART}
+				).length;
                 
                 if(x1 + x2 > 0)
                 {
@@ -306,10 +318,10 @@ var prepareA = function(sp)
     }
     if(typeof(Memory.attack) != 'undefined' && Memory.attack.length > 0)
     {
-        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && creep.memory.attackId == Memory.attack[0]).length; 
+        var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && creep.memory.attackId == Memory.attack[0] && creep.memory.room == sp.room.name).length; 
         if(cr < ATTACK_ID)
         {
-            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && typeof(creep.memory.attack) == 'undefined');
+            var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && typeof(creep.memory.attack) == 'undefined' && creep.memory.room == sp.room.name);
             if(crFree.length > 0)
             {
                 var obj = Game.getObjectById(Memory.attack[0]);

@@ -27,11 +27,11 @@ var roleAttacker = {
                 {
                     if(Memory.attack[i] == creep.memory.attackId)
                     {
-                        Memory.attack.splice(i, 1);
+                        //Memory.attack.splice(i, 1);
                     }
                 }
-                delete creep.memory.attackId;
-				delete creep.memory.attack;
+                //delete creep.memory.attackId;
+				//delete creep.memory.attack;
             }
         }
 

@@ -8,11 +8,23 @@ var market = require('control.market');
 module.exports.loop = function () {
 
     memory.run();
-    constructor.run();
     spawner.run(); 
     creeps.run();
-    tower.run();
-    market.run();
+    
+    if(Game.time % 10 == 0)
+    {
+        constructor.run();
+    }
+    
+    if(Game.cpu.getUsed() < 20)
+    {
+        tower.run();
+    }
+    
+    if(Game.cpu.getUsed() < 20)
+    {
+        market.run();
+    }
  
 };
 

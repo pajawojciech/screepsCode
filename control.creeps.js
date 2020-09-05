@@ -19,7 +19,7 @@ module.exports = {
             if(creep.memory.role == 'h') {
                 if(!roleHarvester.run(creep))
                 {
-                    roleUpgrader.run(creep);
+                    //roleUpgrader.run(creep);
                 }
             }
             if(creep.memory.role == 'u') {

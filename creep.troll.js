@@ -3,6 +3,12 @@ var utils = require('utils.creep');
 var roleTroll = {
     run: function(creep) {
 
+        if(typeof(Game.flags['t2']) == 'undefined' || typeof(Game.flags['t1']) == 'undefined')
+        {
+            creep.say('flag');
+            return;
+        }
+
         if(creep.memory.healing && creep.hits == creep.hitsMax) {
             creep.memory.healing = false;
 	    }

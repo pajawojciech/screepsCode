@@ -29,7 +29,7 @@ module.exports = {
             }
             else if(extB == 0) //jeśli skończony pierwszy container buduj extensiony
             {
-                extensions = createConstructionSquare(sp.pos, STRUCTURE_EXTENSION);//, true, 6);
+                extensions = createConstructionSquare(sp.pos, STRUCTURE_EXTENSION, true, 6);
             }
             
             //ustaw memory sources containerId
