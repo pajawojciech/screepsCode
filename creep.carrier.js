@@ -1,3 +1,5 @@
+var cm = require('utils.common');
+
 var roleCarrier = {
     run: function(creep) {
         var GET_FROM_STORAGE = false;
@@ -60,15 +62,15 @@ var roleCarrier = {
 	            
 	            if(typeof(creep.memory.containerId) == 'undefined')
 	            {
-        	        var s = Memory.sources
+        	        var containers = Memory.sources
         	            .filter((x) => typeof(x.containerId) != 'undefined' && x.home == creep.memory.room )
-        	            .map((x) => x.containerId)
-        	            .sort(sortContainers);
-
-                    if(s.length > 0)
-                    {
-                        creep.memory.containerId = s[0];
-                    }
+        	            .map((x) => x.containerId);
+        	            
+        	        var mm = cm.getMinMax(containers, x => getContainerFreeCapacity(x));
+        	        if(mm != null)
+        	        {
+        	            creep.memory.containerId = mm.minObj;
+        	        }
 	            }
 
                 if(GET_FROM_STORAGE && typeof(creep.room.storage) != 'undefined' && creep.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
@@ -105,7 +107,11 @@ var roleCarrier = {
 
                 if(targets.length > 0 && Game.time % 100 != 0)
                 {
-                    creep.memory.targetId = minEnergy(targets).id;
+                    var mm = cm.getMinMax(targets, x => x.store.getUsedCapacity(RESOURCE_ENERGY));
+                    if(mm != null)
+                    {
+                        creep.memory.targetId = mm.minObj.id;
+                    }
                 }
                 else if(typeof(room.terminal) != 'undefined' && room.terminal.store.getFreeCapacity() > 0)
                 {
@@ -137,48 +143,17 @@ var roleCarrier = {
 	}
 };
 
-var minEnergy = function(targets)
+var getContainerFreeCapacity = function(x)
 {
-    var res;
-    for(var t in targets)
-    {
-        var temp = targets[t];
-        if(typeof(res) == 'undefined')
-        {
-            res = temp;
-        }
-        else
-        {
-            if(res.store.getUsedCapacity(RESOURCE_ENERGY) > temp.store.getUsedCapacity(RESOURCE_ENERGY))
-            {
-                res = temp;
-            }
-        }
-    }
-    return res;
-}
-
-var sortContainers = function(x,y) 
-{
-    var xg = Game.getObjectById(x); 
-    var yg = Game.getObjectById(y);
-    if(xg == null)
-    {
-        return 1;
-    }
-    if(yg == null)
-    {
-        return -1;
-    }
-    if(xg.store.getFreeCapacity() > yg.store.getFreeCapacity())
-    {
-        return 1;
-    }
-    else if(xg.store.getFreeCapacity() == yg.store.getFreeCapacity())
+    var obj = Game.getObjectById(x);
+    if(obj == null)
     {
         return 0;
     }
-    return -1;
-} 
+    else
+    {
+        return obj.store.getFreeCapacity();
+    }
+}
 
 module.exports = roleCarrier;

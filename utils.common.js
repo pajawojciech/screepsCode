@@ -32,7 +32,8 @@ module.exports = {
             minObj : minObj,
             minVal : minVal,
             maxObj : maxObj,
-            maxVal : maxVal
+            maxVal : maxVal,
+            toString : function() { return 'MIN:' +  this.minVal + '|' + this.minObj + ' MAX:' + this.maxVal + '|' + this.maxObj }
         }
     },
 };

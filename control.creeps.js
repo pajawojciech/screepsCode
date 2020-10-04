@@ -15,7 +15,11 @@ module.exports = {
         for(var name in Game.creeps) 
         {
             var creep = Game.creeps[name];
-        
+            if(typeof(creep.ticksToLive) == 'undefined')
+            {
+                continue;
+            }
+            
             if(creep.memory.role == 'h') {
                 if(!roleHarvester.run(creep))
                 {

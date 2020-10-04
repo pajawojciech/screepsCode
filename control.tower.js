@@ -1,3 +1,5 @@
+var cm = require('utils.common');
+
 var roleTower = {
     run: function()
     {
@@ -28,18 +30,22 @@ var roleTower = {
                         });
     
                         var newRampart = structures.find((x) => x.structureType == STRUCTURE_RAMPART && x.hits < 1000);
-                        var closestDamagedStructure;
+                        var structureToRepair;
                         if(typeof(newRampart) == 'undefined')
                         {
-                            closestDamagedStructure = structures.sort(sortStructuresByHits)[0];
+                            mm = cm.getMinMax(structures, x => x.hits / x.hitsMax);
+                            if(mm != null)
+                            {
+                                structureToRepair = mm.minObj;
+                            }
                         }
                         else
                         {
-                            closestDamagedStructure = newRampart;
+                            structureToRepair = newRampart;
                         }
     
-                        if(closestDamagedStructure) {
-                            tower.repair(closestDamagedStructure);
+                        if(structureToRepair) {
+                            tower.repair(structureToRepair);
                         }
                         else
                         {
@@ -58,22 +64,6 @@ var roleTower = {
         }
     }
 };
-
-var sortStructuresByHits = function(x,y) //procentowo najsłabszy
-{
-    var xg = x.hits / x.hitsMax;
-    var yg = y.hits / y.hitsMax;
-
-    if(xg > yg)
-    {
-        return 1;
-    }
-    else if(xg == yg)
-    {
-        return 0;
-    }
-    return -1;
-} 
 
 
 module.exports = roleTower;

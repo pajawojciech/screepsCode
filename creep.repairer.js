@@ -1,5 +1,6 @@
 var utils = require('utils.creep');
 var roleUpgrader = require('creep.upgrader');
+var cm = require('utils.common');
 
 var roleRepairer = {
     run: function(creep) {
@@ -78,15 +79,18 @@ var roleRepairer = {
                             && structure.hits != structure.hitsMax);
                         }
                     });
-                    var targetsSort = targets.sort(sortStructuresByHits);
-                    var targetsRamp = targetsSort.filter((x) => x.structureType == STRUCTURE_RAMPART && x.hits == 1);
+                    var targetsRamp = targets.filter((x) => x.structureType == STRUCTURE_RAMPART && x.hits == 1);
                     if(targetsRamp.length > 0)
                     {
                         target = targetsRamp[0];
                     }
                     else
                     {
-                        target = targetsSort[0];
+                        var mm = cm.getMinMax(targets, x => x.hits / x.hitsMax);
+                        if(mm != null)
+                        {
+                            target = mm.minObj;
+                        }
                     }
 	            }
 	            else
@@ -96,7 +100,12 @@ var roleRepairer = {
                         return ((structure.structureType == STRUCTURE_WALL || structure.structureType == STRUCTURE_RAMPART) && structure.hits != structure.hitsMax);
                         }
                     });
-                    target = targets.sort(sortStructuresByHits2)[0];
+
+                    var mm = cm.getMinMax(targets, x => x.hits);
+                    if(mm != null)
+                    {
+                        target = mm.minObj;
+                    }
 	            }
 	            
                 if(target != null)
@@ -146,37 +155,5 @@ var roleRepairer = {
         }
 	}
 };
-
-var sortStructuresByHits = function(x,y) //procentowo najsłabszy
-{
-    var xg = x.hits / x.hitsMax;
-    var yg = y.hits / y.hitsMax;
-
-    if(xg > yg)
-    {
-        return 1;
-    }
-    else if(xg == yg)
-    {
-        return 0;
-    }
-    return -1;
-} 
-
-var sortStructuresByHits2 = function(x,y) //procentowo najsłabszy
-{
-    var xg = x.hits;
-    var yg = y.hits;
-
-    if(xg > yg)
-    {
-        return 1;
-    }
-    else if(xg == yg)
-    {
-        return 0;
-    }
-    return -1;
-} 
 
 module.exports = roleRepairer;
