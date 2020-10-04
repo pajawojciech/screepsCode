@@ -1,26 +1,18 @@
+var cm = require('utils.common');
+
 module.exports = {
     run: function()
     {
         var marketRoom = '';
-        //var usedCPU = Game.cpu.getUsed();
-        if(Game.rooms['E13S23'].terminal.cooldown == 0 && Game.rooms['E13S23'].terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
-        {
-            marketRoom = 'E13S23';
-        }
-        if(Game.rooms['E12S24'].terminal.cooldown == 0 && Game.rooms['E12S24'].terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
-        {
-            if(marketRoom != '')
-            {
-                 marketRoom = 
-                    Game.rooms['E13S23'].terminal.store.getUsedCapacity(RESOURCE_ENERGY) > Game.rooms['E12S24'].terminal.store.getUsedCapacity(RESOURCE_ENERGY) ?
-                    'E13S23' : 'E12S24';
-            }
-            else
-            {
-                marketRoom = 'E12S24';
-            }
-        }
         
+        var spawns = _.filter(Game.spawns, x => x.room.terminal.cooldown == 0 && x.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0);
+        var mm = cm.getMinMax(spawns, x => x.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY));
+        
+        if(mm != null)
+        {
+            marketRoom = mm.maxObj.room.name;
+        }
+
         if(marketRoom != '')
         {
             var energy = Game.rooms[marketRoom].terminal.store.getUsedCapacity(RESOURCE_ENERGY);
