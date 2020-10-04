@@ -27,11 +27,12 @@ module.exports = {
                 MIN_PRICE = 0.3;
             else 
                 MIN_PRICE = 0.5;
-    
+
             var orders = Game.market.getAllOrders({type: ORDER_BUY, resourceType: RESOURCE_ENERGY}).filter((x) => x.price >= MIN_PRICE);
             if(orders.length > 0)
             {
-                var o = maxPrice(orders, marketRoom);
+                var o = cm.getMinMax(orders, x => getRealPrice(x, marketRoom)).maxObj;
+                if(o == null) return;
                 var realPrice = getRealPrice(o, marketRoom);
                 var roomr = '';
                 
@@ -54,25 +55,4 @@ module.exports = {
 var getRealPrice = function(o, room)
 {
     return (o.remainingAmount * o.price) / (o.remainingAmount + Game.market.calcTransactionCost(o.remainingAmount, o.roomName, room));
-}
-
-var maxPrice = function(offers, room)
-{
-    var res;
-    for(var o in offers)
-    {
-        var offer = offers[o];
-        if(typeof(res) == 'undefined')
-        {
-            res = offer;
-        }
-        else
-        {
-            if(getRealPrice(offer, room) > getRealPrice(res, room))
-            {
-                res = offer;
-            }
-        }
-    }
-    return res;
 }
