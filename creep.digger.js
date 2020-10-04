@@ -29,7 +29,38 @@ var roleDigger = {
             }
             creep.harvest(source);
         }
-	}
+	},
+	
+	prepare : function(sp, getBody)
+    {
+        var eca = sp.memory.eca;
+        var d = 0;
+        var dLimit = getBody('d', eca).limit;
+        if(typeof(dLimit) == 'undefined') dLimit = 0;
+        var sources = Memory.sources.filter((x) => x.home == sp.room.name);
+        for(var i in sources)
+        {
+            var mem = sources[i];
+            if(typeof(mem.containerId) != 'undefined')
+            {
+                var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && creep.memory.room == sp.room.name && creep.memory.sourceId == mem.sourceId);  
+                var limit = (mem.space > dLimit) ? dLimit : mem.space;
+                
+                d += limit;
+                
+                if(cr.length < limit)
+                {
+                    var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'd' && creep.memory.room == sp.room.name && typeof(creep.memory.sourceId) == 'undefined');
+                    if(crFree.length > 0)
+                    {
+                        crFree[0].memory.sourceId = mem.sourceId;
+                    }
+                }
+            }
+        }
+        return d;
+    }
+
 };
 
 module.exports = roleDigger;

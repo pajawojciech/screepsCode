@@ -153,7 +153,36 @@ var roleRepairer = {
 	            }
             }
         }
-	}
+	},
+	prepare : function(sp, getBody)
+    {
+        var eca = sp.memory.eca;
+        var ret = getBody('r', eca).limit;
+        if(sp.room.controller.level == 8) 
+        {
+            ret = ret + 2;
+        }
+        var claims = Memory.claim.filter((x) => x.home == sp.room.name );
+        for(var i in claims)
+        {
+            var roomName = claims[i].room;
+            var claimRoom = Game.rooms[roomName];
+            if(typeof(claimRoom) != 'undefined' && claimRoom.find(FIND_STRUCTURES, { filter: (x) => x.structureType == STRUCTURE_CONTAINER }).length > 0)
+            {
+                ret++;
+                var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'r' && creep.memory.room == sp.room.name && creep.memory.destRoom == roomName).length; 
+                if(cr < 1)
+                {
+                    var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'r' && creep.memory.room == sp.room.name && typeof(creep.memory.destRoom) == 'undefined');
+                    if(crFree.length > 0)
+                    {
+                        crFree[0].memory.destRoom = roomName;
+                    }
+                }
+            }
+        }
+        return ret;
+    }
 };
 
 module.exports = roleRepairer;

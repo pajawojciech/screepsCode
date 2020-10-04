@@ -140,7 +140,49 @@ var roleCarrier = {
                 }
             }
         }
-	}
+	},
+	prepare : function(sp, getBody)
+    {
+        if(typeof(Memory.sources) == 'undefined') return;
+        var sources = Memory.sources.filter((x) => typeof(x.containerId) != 'undefined' && x.home == sp.room.name );
+        for(var i in sources)
+        {
+            var source = sources[i];
+            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && creep.memory.assignedCont == source.containerId).length; 
+            if(cr < 1)
+            {
+                var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && typeof(creep.memory.assignedCont) == 'undefined');
+                if(crFree.length > 0)
+                {
+                    crFree[0].memory.assignedCont = source.containerId;
+                }
+            }
+        }
+        
+        var st = 0;
+        if(typeof(Memory.steal) != 'undefined')
+        {
+            var list = Memory.steal.filter((x) => x.room == sp.room.name);
+            for(var l in list)
+            {
+                var item = list[l];
+                st++;
+                var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && creep.memory.stealFrom == item.from && creep.memory.stealTo == item.to).length; 
+                if(cr < 1)
+                {
+                    var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && typeof(creep.memory.assignedCont) == 'undefined' && typeof(creep.memory.stealFrom) == 'undefined' && typeof(creep.memory.stealTo) == 'undefined');
+                    if(crFree.length > 0)
+                    {
+                        crFree[0].memory.stealFrom = item.from;
+                        crFree[0].memory.stealTo = item.to;
+                        crFree[0].memory.stealType = item.type;
+                    }
+                }
+            }
+        }
+        
+        return sources.length + Memory.claim.filter((x) => x.home == sp.room.name).length + st;
+    }
 };
 
 var getContainerFreeCapacity = function(x)

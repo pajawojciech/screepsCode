@@ -45,7 +45,40 @@ var roleBuilder = {
 	        utils.getEnergy(creep);
 	    }
 	    return true;
-	}
+	},
+	
+	prepare : function(sp, getBody)
+    {
+        var eca = sp.memory.eca;
+        var b = sp.room.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.structureType != STRUCTURE_WALL && x.structureType != STRUCTURE_RAMPART}).length > 0 ? getBody('b', eca).limit : 0;
+        var claims = Memory.claim.filter((x) => x.home == sp.room.name );
+        for(var i in claims)
+        {
+            var roomName = claims[i].room;
+            var claimRoom = Game.rooms[roomName];
+            if(typeof(claimRoom) != 'undefined' && claimRoom.find(FIND_CONSTRUCTION_SITES, { filter: (x) => x.my }).length > 0)
+            {
+                var t = getBody('b', eca).limit;
+                b = b + t;
+                //if(claimRoom.controller.my)
+                //{
+                    //b += 1;
+                    //t = 2;
+                //}
+                
+                var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && creep.memory.destRoom == roomName && creep.memory.room == sp.room.name).length; 
+                if(cr < t)
+                {
+                    var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'b' && creep.memory.room == sp.room.name && typeof(creep.memory.destRoom) == 'undefined');
+                    if(crFree.length > 0)
+                    {
+                        crFree[0].memory.destRoom = roomName;
+                    }
+                }
+            }
+        }
+        return b;
+    }
 };
 
 module.exports = roleBuilder;
