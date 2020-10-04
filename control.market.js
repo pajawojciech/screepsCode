@@ -5,7 +5,7 @@ module.exports = {
     {
         var marketRoom = '';
         
-        var spawns = _.filter(Game.spawns, x => x.room.terminal.cooldown == 0 && x.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0);
+        var spawns = _.filter(Game.spawns, x => typeof(x.room.terminal) != 'undefined' &&  x.room.terminal.cooldown == 0 && x.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY) > 0);
         var mm = cm.getMinMax(spawns, x => x.room.terminal.store.getUsedCapacity(RESOURCE_ENERGY));
         
         if(mm != null)
