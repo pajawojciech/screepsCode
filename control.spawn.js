@@ -64,7 +64,7 @@ var roleSpawn = {
                         }
                     }
                     
-                    checkAndCreate(sp, 'u');
+                    //checkAndCreate(sp, 'u');
                 }
             }
         }
@@ -145,6 +145,10 @@ var prepareR = function(sp)
 {
     var eca = sp.memory.eca;
     var ret = getBody('r', eca).limit;
+    if(sp.room.controller.level == 8) 
+    {
+        ret = ret + 2;
+    }
     var claims = Memory.claim.filter((x) => x.home == sp.room.name );
     for(var i in claims)
     {

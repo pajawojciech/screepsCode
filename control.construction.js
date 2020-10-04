@@ -86,7 +86,7 @@ module.exports = {
                 }
                 else if(extensions == ERR_RCL_NOT_ENOUGH && contB + extB == 0)//drogi
                 {
-                    var source = Memory.sources.find(function(x) { return typeof(x.road) == 'undefined' } );
+                    var source = Memory.sources.find(function(x) { return typeof(x.road) == 'undefined' && x.home == sp.room.name} );
                     if(typeof(source) != 'undefined')
                     {
                         var cont = Game.getObjectById(source.sourceId);
