@@ -1,5 +1,6 @@
 var utils = require('utils.creep');
-
+//flaga t1 - pokój przeciwnika na granicy
+//flaga t2 - pokój własny, krok od granicy
 var roleTroll = {
     run: function(creep) {
 

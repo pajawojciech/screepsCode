@@ -25,9 +25,9 @@ var roleSpawn = {
             if(!checkAndCreate(sp, 'a', a)) return;
             //if(!checkAndCreate(sp, 'he', a / 4)) return;
             
-            if(sp.room.name == 'E13S23') //TODO jesli flaga istnieje
+            if(sp.room.name == 'E13S23' && typeof(Game.flags['t2']) != 'undefined' && typeof(Game.flags['t1']) != 'undefined')
             {
-                //checkAndCreate(sp, 't');
+                checkAndCreate(sp, 't');
             }
     
             if(checkAndCreate(sp, 'h'))
