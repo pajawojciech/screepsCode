@@ -1,6 +1,8 @@
 /* 
 MEMORY
 -attack[] - tablica id do zniszczenia, TODO room 
+    -id - obiekt do zniszczenia
+    -room - pokój w którym jest obiekt (niepotrzebne jesli widoczny)
 -claim[]
     -room - pokój do zdobycia
     -home - pokój matka
@@ -56,6 +58,10 @@ MEMORY
     -to
     -room
     -type
+    
+FLAGS:
+-t1, t2 troll
+-t3 oczekiwanie na atak
 */
 
 
@@ -203,8 +209,9 @@ module.exports = { run: function()
             if(typeof(room) != 'undefined')
             {
                 var controller = room.controller;
-                if(typeof(controller.reservation) != 'undefined' && controller.reservation.ticksToEnd > 100)
+                if(typeof(controller.reservation) != 'undefined' && controller.reservation.ticksToEnd > 100 && controller.reservation.username == 'wp171') //todo name
                 {
+                    
                     var sources = room.find(FIND_SOURCES);
                     for(var s in sources)
                     {

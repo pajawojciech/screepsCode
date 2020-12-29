@@ -11,6 +11,12 @@ var roleAttacker = {
         
         if(typeof(creep.memory.attackId) != 'undefined' )
         {
+            if(typeof(Game.flags['t3']) != 'undefined')
+            {
+                creep.moveTo(Game.flags['t3'].pos);
+                //creep.say('wait');
+                return;
+            }
             var obj = Game.getObjectById(creep.memory.attackId);
             if(obj != null)
             {
@@ -25,7 +31,7 @@ var roleAttacker = {
             {
                 for(var i in Memory.attack)
                 {
-                    if(Memory.attack[i] == creep.memory.attackId)
+                    if(Memory.attack[i].id == creep.memory.attackId)
                     {
                         //Memory.attack.splice(i, 1);
                     }
@@ -72,7 +78,7 @@ var roleAttacker = {
         else
         {
             var enemySt = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES
-                //, {filter: (x) => x.structureType != STRUCTURE_STORAGE}
+                    , {filter: (x) => x.structureType != STRUCTURE_CONTROLLER}
                 );
             if(enemySt != null)
             {
@@ -92,7 +98,7 @@ var roleAttacker = {
     prepare : function(sp, getBody)
     {
         var ATTACK_ROOM = 3;
-        var ATTACK_ID = 1;
+        var ATTACK_ID = 4;
         
         var ret = 0;
         var claims = Memory.claim.filter((x) => x.home == sp.room.name);
@@ -107,7 +113,7 @@ var roleAttacker = {
                 {
                     var x1 = room.find(FIND_HOSTILE_CREEPS).length;
                     var x2 = room.find(FIND_HOSTILE_STRUCTURES
-    					//, {filter: (x) => x.structureType != STRUCTURE_RAMPART}
+				        , {filter: (x) => x.structureType != STRUCTURE_CONTROLLER}
     				).length;
                     
                     if(x1 + x2 > 0)
@@ -136,20 +142,27 @@ var roleAttacker = {
                 ret += ATTACK_ROOM;
             }
         }
-        if(typeof(Memory.attack) != 'undefined' && Memory.attack.length > 0)
+        if(typeof(Memory.attack) != 'undefined' && Memory.attack.length > 0 && sp.room.name == 'E13S23')
         {
-            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && creep.memory.attackId == Memory.attack[0] && creep.memory.room == sp.room.name).length; 
+            var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && creep.memory.attackId == Memory.attack[0].id && creep.memory.room == sp.room.name).length; 
             if(cr < ATTACK_ID)
             {
                 var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'a' && typeof(creep.memory.attack) == 'undefined' && creep.memory.room == sp.room.name);
                 if(crFree.length > 0)
                 {
-                    var obj = Game.getObjectById(Memory.attack[0]);
-                    if(obj != null)
+                    var obj = Game.getObjectById(Memory.attack[0].id);
+                    var attackedRoom = "";
+                    if(obj == null)
                     {
-                        crFree[0].memory.attackId = Memory.attack[0];
-                        crFree[0].memory.attack = obj.room.name;
+                        attackedRoom = Memory.attack[0].room;
                     }
+                    else
+                    {
+                        attackedRoom = obj.room.name;
+                    }
+                    
+                    crFree[0].memory.attackId = Memory.attack[0].id;
+                    crFree[0].memory.attack = attackedRoom;
                 }
             }
             

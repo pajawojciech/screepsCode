@@ -143,6 +143,8 @@ var roleCarrier = {
 	},
 	prepare : function(sp, getBody)
     {
+        var STEALERS = 2;
+        
         if(typeof(Memory.sources) == 'undefined') return;
         var sources = Memory.sources.filter((x) => typeof(x.containerId) != 'undefined' && x.home == sp.room.name );
         for(var i in sources)
@@ -166,9 +168,9 @@ var roleCarrier = {
             for(var l in list)
             {
                 var item = list[l];
-                st++;
+                st += STEALERS;
                 var cr = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && creep.memory.stealFrom == item.from && creep.memory.stealTo == item.to).length; 
-                if(cr < 1)
+                if(cr < STEALERS) 
                 {
                     var crFree = _.filter(Game.creeps, (creep) => creep.memory.role == 'c' && creep.memory.room == sp.room.name && typeof(creep.memory.assignedCont) == 'undefined' && typeof(creep.memory.stealFrom) == 'undefined' && typeof(creep.memory.stealTo) == 'undefined');
                     if(crFree.length > 0)

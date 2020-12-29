@@ -19,10 +19,10 @@ module.exports = {
             var MIN_PRICE;
             if(energy > 290000)
                 MIN_PRICE = 0.1;
-            else if(energy > 200000)
-                MIN_PRICE = 0.175;
-            else if(energy > 150000)
-                MIN_PRICE = 0.2;
+            //else if(energy > 200000)
+                //MIN_PRICE = 0.175;
+            //else if(energy > 150000)
+                //MIN_PRICE = 0.2;
             else if(energy > 100000)
                 MIN_PRICE = 0.3;
             else 

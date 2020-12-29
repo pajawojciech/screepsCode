@@ -22,10 +22,9 @@ var roleSpawn = {
     
             if(sp.spawning != null) continue;
     
-            if(!checkAndCreate(sp, 'a', a)) return;
-            //if(!checkAndCreate(sp, 'he', a / 4)) return;
+            if(!checkAndCreate(sp, 'a', a)) continue;
             
-            if(sp.room.name == 'E13S23' && typeof(Game.flags['t2']) != 'undefined' && typeof(Game.flags['t1']) != 'undefined')
+            if(typeof(Game.flags['t2']) != 'undefined' && typeof(Game.flags['t1']) != 'undefined')
             {
                 checkAndCreate(sp, 't');
             }

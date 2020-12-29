@@ -160,7 +160,7 @@ var roleRepairer = {
         var ret = getBody('r', eca).limit;
         if(sp.room.controller.level == 8) 
         {
-            ret = ret + 2;
+           // ret = ret + 2;
         }
         var claims = Memory.claim.filter((x) => x.home == sp.room.name );
         for(var i in claims)
